@@ -12,6 +12,8 @@ import com.adeemm.expiry.Models.Food;
 import com.adeemm.expiry.Models.ListItem;
 import com.adeemm.expiry.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +28,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private boolean fabToggled = false;
 
     private View overlay;
+
+    private long scannedLong;
+    private String scannedText;
 
     private View fab_cam_view;
     private View fab_mic_view;
@@ -42,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Expiry");
 
@@ -73,10 +81,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ((FloatingActionButton) findViewById(R.id.fab_cam_button)).setOnClickListener(new View.OnClickListener() {
+        ((FloatingActionButton) findViewById(R.id.fab_cam_button)).setOnClickListener(new View.OnClickListener() {//Todo add the camera here
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Camera clicked", Toast.LENGTH_SHORT).show();
+                IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
+                intentIntegrator.setPrompt("For flash use volume up key");
+                intentIntegrator.setBeepEnabled(true);
+                intentIntegrator.setOrientationLocked(true);
+                intentIntegrator.setCaptureActivity(Capture.class);
+                intentIntegrator.initiateScan();
             }
         });
 
@@ -101,6 +115,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         initListItems();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if(intentResult.getContents() != null){
+            Toast.makeText(getApplicationContext(),"Scanned: "+intentResult.getContents(),Toast.LENGTH_SHORT).show();
+            scannedText=intentResult.getContents();
+            scannedLong = Long.parseLong(scannedText);
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"nothing was scanned",Toast.LENGTH_SHORT).show();
+        }
     }
 
     // *** TODO ***
