@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Expiry</string>
+    <string name="recordVoiceTextFAB">Voice Recognition</string>
+    <string name="scanBarcodeTextFAB">Scan Barcode</string>
+    <string name="manualEntryTextFAB">Manual Entry</string>
+    <string name="manual_entry">Manual Entry</string>
+    <string name="manual_menu_title">Entry Selection</string>
+</resources>
