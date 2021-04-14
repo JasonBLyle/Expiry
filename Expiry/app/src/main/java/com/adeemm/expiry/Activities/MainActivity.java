@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
     private View overlay;
 
-    private long scannedLong;
     private String scannedText;
 
     private View fab_cam_view;
@@ -81,10 +80,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ((FloatingActionButton) findViewById(R.id.fab_cam_button)).setOnClickListener(new View.OnClickListener() {//Todo add the camera here
+        ((FloatingActionButton) findViewById(R.id.fab_cam_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Camera clicked", Toast.LENGTH_SHORT).show();
+
                 IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
                 intentIntegrator.setPrompt("For flash use volume up key");
                 intentIntegrator.setBeepEnabled(true);
@@ -120,13 +120,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if(intentResult.getContents() != null){
+        if (intentResult.getContents() != null) {
             Toast.makeText(getApplicationContext(),"Scanned: "+intentResult.getContents(),Toast.LENGTH_SHORT).show();
-            scannedText=intentResult.getContents();
-            scannedLong = Long.parseLong(scannedText);
+            scannedText = intentResult.getContents();
         }
-        else{
+        else {
             Toast.makeText(getApplicationContext(),"nothing was scanned",Toast.LENGTH_SHORT).show();
         }
     }
