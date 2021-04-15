@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.adeemm.expiry.AnimationHelper;
 import com.adeemm.expiry.ListAdapter;
 import com.adeemm.expiry.Models.ExpirationAPI;
+import com.adeemm.expiry.Models.ExpirationDatabase;
 import com.adeemm.expiry.Models.Food;
 import com.adeemm.expiry.Models.ListItem;
 import com.adeemm.expiry.R;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean fabToggled = false;
 
     private View overlay;
+
 
     private String scannedText;
 
@@ -84,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Camera clicked", Toast.LENGTH_SHORT).show();
-
                 IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
                 intentIntegrator.setPrompt("For flash use volume up key");
                 intentIntegrator.setBeepEnabled(true);
@@ -109,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
         ((FloatingActionButton) findViewById(R.id.fab_manual_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ExpirationDatabase dataBaseHelper = new ExpirationDatabase(MainActivity.this);
+                Food temp = new Food("Apple", "Produce", new Date());
+                dataBaseHelper.addFood(temp);
                 Intent intent = new Intent(view.getContext(), ManualEntrySelection.class);
                 startActivity(intent);
             }
@@ -120,13 +124,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if (intentResult.getContents() != null) {
+        if(intentResult.getContents() != null){
             Toast.makeText(getApplicationContext(),"Scanned: "+intentResult.getContents(),Toast.LENGTH_SHORT).show();
-            scannedText = intentResult.getContents();
+            scannedText=intentResult.getContents();
         }
-        else {
+        else{
             Toast.makeText(getApplicationContext(),"nothing was scanned",Toast.LENGTH_SHORT).show();
         }
     }
@@ -160,10 +163,11 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-
+        Date temp = new Date(21+100,4,12);
         Food f1 = new Food("Apple", "Produce", new Date());
         Food f2 = new Food("Orange", "Produce", new Date());
         Food f3 = new Food("Grapes", "Produce", new Date());
+        Food f4 = new Food("Grapes", "Produce", temp);
 
         List<ListItem> items = new ArrayList<>();
         items.add(0, new ListItem("Section 1", true));
