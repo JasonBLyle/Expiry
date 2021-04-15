@@ -25,4 +25,22 @@ public class Food {
     public Date getExpiration() {
         return expiration;
     }
+
+    public int getYear(){return expiration.getYear();}
+
+    public int getMonth(){return expiration.getMonth();}
+
+    public int getDay(){return expiration.getDay();}
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setExpiration(Date expiration) {
+        this.expiration = expiration;
+    }
 }
