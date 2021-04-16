@@ -86,7 +86,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (item.getFood() != null) {
                 view.description.setText(item.getFood().getExpiration().toString());
 
-                int resID = ctx.getResources().getIdentifier("food_" + item.getFood().getName().toLowerCase(), "drawable", ctx.getPackageName());
+                int resID = item.getFood().getPictureID();
 
                 if (resID == 0) {
                     resID = R.drawable.food_misc;

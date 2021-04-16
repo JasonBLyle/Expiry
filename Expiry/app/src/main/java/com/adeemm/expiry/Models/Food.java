@@ -1,5 +1,6 @@
 package com.adeemm.expiry.Models;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Food {
@@ -8,11 +9,16 @@ public class Food {
     private String category;
     private Date expiration;
     private int pictureID;
-    public Food(String name, String category, Date expiration) {
+    private Calendar calendar;
+
+    public Food(String name, Date expiration) {
         this.name = name;
         this.category = category;
         this.expiration = expiration;
         this.pictureID = 0;
+
+        this.calendar = Calendar.getInstance();
+        this.calendar.setTime(expiration);
     }
 
     public String getName() {
@@ -27,29 +33,22 @@ public class Food {
         return expiration;
     }
 
-    public int getYear(){return expiration.getYear();}
+    public int getYear(){ return this.calendar.get(Calendar.YEAR); }
 
-    public int getPictureID() {
-        return pictureID;
-    }
+    public int getPictureID() { return pictureID; }
 
-    public void setPictureID(int pictureID) {
-        this.pictureID = pictureID;
-    }
+    public void setPictureID(int pictureID) { this.pictureID = pictureID; }
 
-    public int getMonth(){return expiration.getMonth();}
+    public int getMonth(){ return this.calendar.get(Calendar.MONTH); }
 
-    public int getDay(){return expiration.getDay();}
+    public int getDay(){ return this.calendar.get(Calendar.DAY_OF_MONTH); }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
+    public void setCategory(String category) { this.category = category; }
 
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
+        this.calendar.setTime(expiration);
     }
 }

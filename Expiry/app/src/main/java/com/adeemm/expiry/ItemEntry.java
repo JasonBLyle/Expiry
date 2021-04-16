@@ -2,6 +2,7 @@ package com.adeemm.expiry;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,10 +11,12 @@ import androidx.core.content.ContextCompat;
 
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adeemm.expiry.Models.Food;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +26,13 @@ import java.util.Date;
 public class ItemEntry extends AppCompatActivity {
 
     private boolean submitted = false;
+
+    private Food f;
+
+    private ImageView foodFormImageView;
+    private TextView foodFormName;
+    private TextView foodFormExpiration;
+    private Date selectedExpirationDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +44,44 @@ public class ItemEntry extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setupEventListeners(findViewById(R.id.expirationDateTextView));
+        foodFormImageView = findViewById(R.id.foodImageView);
+        foodFormName = findViewById(R.id.foodNameTextView);
+        foodFormExpiration = findViewById(R.id.expirationDateTextView);
+
+        setupEventListeners(foodFormExpiration);
+
+        // Check if UPC scan flow
+        Intent intent = getIntent();
+        String productName = intent.getStringExtra("FOOD_NAME");
+        int imageID = intent.getIntExtra("FOOD_PIC", 0);
+        if (imageID != 0 && !productName.equals("")) {
+            foodFormName.setText(productName);
+            foodFormImageView.setImageResource(imageID);
+
+            f = new Food(productName, new Date());
+            f.setPictureID(imageID);
+        }
     }
 
     public void onSubmitClick(View view) {
-
-        TextView food_name = findViewById(R.id.foodNameTextView);
-        TextView expiration_date = findViewById(R.id.expirationDateTextView);
-
-        if (!food_name.getText().toString().trim().equals("") && !expiration_date.getText().toString().trim().equals("")) {
+        if (!foodFormName.getText().toString().trim().equals("") && !foodFormExpiration.getText().toString().trim().equals("")) {
             if (!submitted) {
                 submitted = true;
                 ((ProgressBar)findViewById(R.id.searchProgressBar)).setVisibility(View.VISIBLE);
                 ((View)findViewById(R.id.item_entry_form)).setVisibility(View.GONE);
 
-                // TODO: Save Food
+                if (f != null) {
+                    f.setName(foodFormName.getText().toString());
+                    f.setExpiration(selectedExpirationDate);
+                }
+                else {
+                    f = new Food(foodFormName.getText().toString(), selectedExpirationDate);
+                    f.setPictureID(R.drawable.food_misc);
+                }
+
+                // TODO: save food
+
+                f = null;
             }
         }
         else {
@@ -70,7 +103,8 @@ public class ItemEntry extends AppCompatActivity {
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
                         long time = calendar.getTimeInMillis();
-                        ((TextView)findViewById(R.id.expirationDateTextView)).setText(Utils.getFormattedDate(time));
+                        selectedExpirationDate = calendar.getTime();
+                        foodFormExpiration.setText(Utils.getFormattedDate(time));
                     }
                 },
                 cur_calender.get(Calendar.YEAR),

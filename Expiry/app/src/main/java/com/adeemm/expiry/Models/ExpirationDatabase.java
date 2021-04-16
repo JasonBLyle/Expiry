@@ -98,7 +98,7 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                 int month = cursor.getInt(5);
                 int day = cursor.getInt(6);
                 Date tempDate = new Date(year,month,day);
-                Food tempFood = new Food(name,category,tempDate);
+                Food tempFood = new Food(name,tempDate);
                 tempFood.setPictureID(pictureID);
                 returnList.add(tempFood);
             }while(cursor.moveToNext());

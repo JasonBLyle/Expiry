@@ -30,8 +30,8 @@ public class SearchResults extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
-        // TOOD: fix
-        //Toolbar toolbar = findViewById(R.id.toolbar);
+        // TODO: fix and add include
+        Toolbar toolbar = findViewById(R.id.toolbar3);
         //toolbar.setTitle("Search Results");
         //setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);

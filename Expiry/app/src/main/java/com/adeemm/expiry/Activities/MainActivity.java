@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.adeemm.expiry.AnimationHelper;
+import com.adeemm.expiry.ItemEntry;
 import com.adeemm.expiry.ListAdapter;
+import com.adeemm.expiry.Models.BarcodeAPI;
 import com.adeemm.expiry.Models.ExpirationAPI;
 import com.adeemm.expiry.Models.ExpirationDatabase;
 import com.adeemm.expiry.Models.Food;
@@ -33,6 +35,9 @@ import java.util.Map;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
     private View overlay;
 
-    private String scannedText;
-
     private View fab_cam_view;
     private View fab_mic_view;
     private View fab_manual_view;
+
+    private BarcodeAPI api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        api = new BarcodeAPI(this);
         initListItems();
     }
 
@@ -124,10 +130,47 @@ public class MainActivity extends AppCompatActivity {
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if (intentResult.getContents() != null) {
             Toast.makeText(getApplicationContext(),"Scanned: " + intentResult.getContents(), Toast.LENGTH_SHORT).show();
-            scannedText = intentResult.getContents();
+            String scannedText = intentResult.getContents();
+
+            Uri uri = api.getURL(scannedText);
+            api.getData(uri, this::productBarcodeHandler);
         }
         else {
             Toast.makeText(getApplicationContext(),"Nothing was scanned", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void productBarcodeHandler(JSONObject response) {
+        try {
+            JSONObject productInfo = response.getJSONObject("product");
+            JSONArray keywords = productInfo.getJSONArray("_keywords");
+
+            String name = productInfo.getString("product_name");
+            int resID = R.drawable.food_misc;
+
+            for (int i = 0; i < keywords.length(); i++) {
+                String keyword = keywords.getString(i);
+
+                if (keyword.contains(" ")) {
+                    keyword = keyword.replace(" ", "_");
+                }
+
+                int resource = this.getResources().getIdentifier("food_" + keyword, "drawable", this.getPackageName());
+                if (resource != 0) {
+                    resID = resource;
+                    break;
+                }
+            }
+
+            Intent intent = new Intent(this, ItemEntry.class);
+            intent.putExtra("FOOD_NAME", name);
+            intent.putExtra("FOOD_PIC", resID);
+            startActivity(intent);
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(),"ERROR finding product!", Toast.LENGTH_LONG).show();
+            Log.e("UPC Scan Error:", e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -157,23 +200,23 @@ public class MainActivity extends AppCompatActivity {
         ExpirationDatabase expirationDatabase = new ExpirationDatabase(MainActivity.this);
         List<Food> foods = expirationDatabase.getAll();
 
-        Date temp = new Date(21+100,4,12);
-        Food f1 = new Food("Apple", "Produce", new Date());
-        Food f2 = new Food("Orange", "Produce", new Date());
-        Food f3 = new Food("Grapes", "Produce", new Date());
-        Food f4 = new Food("Grapes", "Produce", temp);
-
+//        Date temp = new Date(21+100,4,12);
+//        Food f1 = new Food("Apple",  new Date());
+//        Food f2 = new Food("Orange", new Date());
+//        Food f3 = new Food("Grapes", new Date());
+//        Food f4 = new Food("Grapes",  temp);
+//
         List<ListItem> items = new ArrayList<>();
-        items.add(0, new ListItem("Section 1", true));
-        items.add(1, new ListItem(f1));
-        items.add(2, new ListItem(f2));
-        items.add(3, new ListItem("Section 2", true));
-        items.add(4, new ListItem(f3));
-        items.add(5, new ListItem(f4));
-
-        for(int i = 0; i < foods.size(); i++) {
-            items.add(i + 6, new ListItem(foods.get(i)));
-        }
+//        items.add(0, new ListItem("Section 1", true));
+//        items.add(1, new ListItem(f1));
+//        items.add(2, new ListItem(f2));
+//        items.add(3, new ListItem("Section 2", true));
+//        items.add(4, new ListItem(f3));
+//        items.add(5, new ListItem(f4));
+//
+//        for(int i = 0; i < foods.size(); i++) {
+//            items.add(i + 6, new ListItem(foods.get(i)));
+//        }
 
         ListAdapter adapter = new ListAdapter(this, items);
         recyclerView.setAdapter(adapter);

@@ -17,13 +17,11 @@ import java.util.function.Consumer;
 
 public class BarcodeAPI {
     private final String baseURL = "https://world.openfoodfacts.org/api/v0/product/";
-    private final Consumer<JSONObject> callback;
     private final Activity instance;
     private final RequestQueue rq;
 
-    public BarcodeAPI(Consumer<JSONObject> call, Activity obj) {
+    public BarcodeAPI(Activity obj) {
         this.rq = Volley.newRequestQueue(obj);
-        this.callback = call;
         this.instance = obj;
     }
 
@@ -31,12 +29,12 @@ public class BarcodeAPI {
         return Uri.parse(baseURL + UPC + ".json");
     }
 
-    public void getData(Uri url) {
+    public void getData(Uri url, Consumer<JSONObject> callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url.toString(), null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // TODO: Handle response
+                        callback.accept(response);
                     }
                 },
 
