@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.adeemm.expiry.Fragments.ManualEntrySelectionFragment;
+import com.adeemm.expiry.ItemEntry;
 import com.adeemm.expiry.R;
 
 
@@ -25,14 +26,31 @@ public class ManualEntrySelection extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
+
         newFragment.setCallbackResult(new ManualEntrySelectionFragment.CallbackResult() {
             @Override
             public void sendResult(int requestCode) {
-                Toast.makeText(getApplicationContext(), "Menu clicked: " + String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
-                if(requestCode==2){
-                    Intent intent = new Intent(getApplicationContext(),AddItemActivity.class);
+                Class<?> cls;
+
+                switch (requestCode) {
+                    case 0:
+                        cls = Search.class;
+                        break;
+               //     case 1:
+               //         break;
+                    case 2:
+                        cls = ItemEntry.class;
+                        break;
+                    default:
+                        cls = MainActivity.class;
+                        break;
+                }
+
+                try {
+                    Intent intent = new Intent(getApplicationContext(), cls);
                     startActivity(intent);
                 }
+                catch (Exception ignored) { }
             }
         });
     }

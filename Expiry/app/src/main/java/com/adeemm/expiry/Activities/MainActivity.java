@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     private View overlay;
 
-
     private String scannedText;
 
     private View fab_cam_view;
@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Expiry");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Expiry");
 
         FloatingActionButton mainButton = (FloatingActionButton) findViewById(R.id.fab_main_button);
 
@@ -85,9 +85,8 @@ public class MainActivity extends AppCompatActivity {
         ((FloatingActionButton) findViewById(R.id.fab_cam_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Camera clicked", Toast.LENGTH_SHORT).show();
                 IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
-                intentIntegrator.setPrompt("For flash use volume up key");
+                intentIntegrator.setPrompt("For flash use the volume up key");
                 intentIntegrator.setBeepEnabled(true);
                 intentIntegrator.setOrientationLocked(true);
                 intentIntegrator.setCaptureActivity(Capture.class);
@@ -98,21 +97,18 @@ public class MainActivity extends AppCompatActivity {
         ((FloatingActionButton) findViewById(R.id.fab_mic_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Mic clicked", Toast.LENGTH_SHORT).show();
-
-                // *** TODO ***
-                ExpirationAPI api = new ExpirationAPI(MainActivity.this::testAPI, MainActivity.this);
-                //api.getSearchResults("apples");
-                api.getExpiration(Uri.parse("https://stilltasty.com/fooditems/index/17993"));
+                Intent intent = new Intent(MainActivity.this, Search.class);
+                intent.putExtra("MIC_FAB", true);
+                startActivity(intent);
             }
         });
 
         ((FloatingActionButton) findViewById(R.id.fab_manual_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ExpirationDatabase dataBaseHelper = new ExpirationDatabase(MainActivity.this);
-                Food temp = new Food("Apple", "Produce", new Date());
-                dataBaseHelper.addFood();
+                //ExpirationDatabase dataBaseHelper = new ExpirationDatabase(MainActivity.this);
+                //Food temp = new Food("Apple", "Produce", new Date());
+                //dataBaseHelper.addFood();
                 Intent intent = new Intent(view.getContext(), ManualEntrySelection.class);
                 startActivity(intent);
             }
@@ -124,20 +120,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if(intentResult.getContents() != null){
-            Toast.makeText(getApplicationContext(),"Scanned: "+intentResult.getContents(),Toast.LENGTH_SHORT).show();
-            scannedText=intentResult.getContents();
-        }
-        else{
-            Toast.makeText(getApplicationContext(),"nothing was scanned",Toast.LENGTH_SHORT).show();
-        }
-    }
 
-    // *** TODO ***
-    public void testAPI(Map<String, Uri> results) {
-        for (Map.Entry<String,Uri> entry : results.entrySet()) {
-            Log.e(entry.getKey(), entry.getValue().toString());
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if (intentResult.getContents() != null) {
+            Toast.makeText(getApplicationContext(),"Scanned: " + intentResult.getContents(), Toast.LENGTH_SHORT).show();
+            scannedText = intentResult.getContents();
+        }
+        else {
+            Toast.makeText(getApplicationContext(),"Nothing was scanned", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -163,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
+
         ExpirationDatabase expirationDatabase = new ExpirationDatabase(MainActivity.this);
         List<Food> foods = expirationDatabase.getAll();
+
         Date temp = new Date(21+100,4,12);
         Food f1 = new Food("Apple", "Produce", new Date());
         Food f2 = new Food("Orange", "Produce", new Date());
@@ -179,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
         items.add(4, new ListItem(f3));
         items.add(5, new ListItem(f4));
 
-        for(int i = 0;i<foods.size();i++){
-            items.add(i+6,new ListItem(foods.get(i)));
+        for(int i = 0; i < foods.size(); i++) {
+            items.add(i + 6, new ListItem(foods.get(i)));
         }
 
         ListAdapter adapter = new ListAdapter(this, items);

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.util.Log;
 
+import com.adeemm.expiry.Utils;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,17 +28,15 @@ import java.util.function.Consumer;
 
 public class ExpirationAPI {
     private final String searchURL = "https://stilltasty.com/searchitems/search";
-    private final Consumer<Map<String, Uri>> callback;
     private final Activity instance;
     private final RequestQueue rq;
 
-    public ExpirationAPI(Consumer<Map<String, Uri>> call, Activity obj) {
+    public ExpirationAPI(Activity obj) {
         this.rq = Volley.newRequestQueue(obj);
-        this.callback = call;
         this.instance = obj;
     }
 
-    public void getSearchResults(String query) {
+    public void getSearchResults(String query, Consumer<Map<String, Uri>> callback) {
         rq.getCache().clear();
 
         StringRequest request = new StringRequest
@@ -54,7 +53,7 @@ public class ExpirationAPI {
 
                             for (Element n : nodes) {
                                 Element anchor = n.child(0);
-                                results.put(anchor.text(), Uri.parse(anchor.attr("href")));
+                                results.put(Utils.convertToTitleCase(anchor.text()), Uri.parse(anchor.attr("href")));
                             }
                         }
 
@@ -87,7 +86,7 @@ public class ExpirationAPI {
         rq.add(request);
     }
 
-    public void getExpiration(Uri uri) {
+    public void getExpiration(Uri uri, Consumer<String> callback) {
         StringRequest request = new StringRequest(Request.Method.GET, uri.toString(), new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
