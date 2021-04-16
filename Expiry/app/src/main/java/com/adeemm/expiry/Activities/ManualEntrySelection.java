@@ -1,6 +1,7 @@
 package com.adeemm.expiry.Activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,6 +29,10 @@ public class ManualEntrySelection extends AppCompatActivity {
             @Override
             public void sendResult(int requestCode) {
                 Toast.makeText(getApplicationContext(), "Menu clicked: " + String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                if(requestCode==2){
+                    Intent intent = new Intent(getApplicationContext(),AddItemActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

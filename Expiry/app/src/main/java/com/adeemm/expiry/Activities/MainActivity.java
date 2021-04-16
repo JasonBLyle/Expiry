@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 ExpirationDatabase dataBaseHelper = new ExpirationDatabase(MainActivity.this);
                 Food temp = new Food("Apple", "Produce", new Date());
-                dataBaseHelper.addFood(temp);
+                dataBaseHelper.addFood();
                 Intent intent = new Intent(view.getContext(), ManualEntrySelection.class);
                 startActivity(intent);
             }
@@ -163,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
+        ExpirationDatabase expirationDatabase = new ExpirationDatabase(MainActivity.this);
+        List<Food> foods = expirationDatabase.getAll();
         Date temp = new Date(21+100,4,12);
         Food f1 = new Food("Apple", "Produce", new Date());
         Food f2 = new Food("Orange", "Produce", new Date());
@@ -175,6 +177,11 @@ public class MainActivity extends AppCompatActivity {
         items.add(2, new ListItem(f2));
         items.add(3, new ListItem("Section 2", true));
         items.add(4, new ListItem(f3));
+        items.add(5, new ListItem(f4));
+
+        for(int i = 0;i<foods.size();i++){
+            items.add(i+6,new ListItem(foods.get(i)));
+        }
 
         ListAdapter adapter = new ListAdapter(this, items);
         recyclerView.setAdapter(adapter);
