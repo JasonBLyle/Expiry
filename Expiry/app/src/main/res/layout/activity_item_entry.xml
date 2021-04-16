@@ -54,6 +54,7 @@
                         android:layout_height="115dp"
                         android:layout_gravity="center"
                         android:layout_marginBottom="45dp"
+                        android:onClick="showImagePicker"
                         app:srcCompat="@drawable/food_misc" />
 
                     <com.google.android.material.textfield.TextInputLayout

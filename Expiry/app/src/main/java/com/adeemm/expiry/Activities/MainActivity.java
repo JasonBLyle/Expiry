@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if (intentResult.getContents() != null) {
-            Toast.makeText(getApplicationContext(),"Scanned: " + intentResult.getContents(), Toast.LENGTH_SHORT).show();
             String scannedText = intentResult.getContents();
 
             Uri uri = api.getURL(scannedText);

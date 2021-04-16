@@ -2,9 +2,12 @@ package com.adeemm.expiry;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -19,7 +22,9 @@ import android.widget.Toast;
 import com.adeemm.expiry.Models.Food;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,6 +33,9 @@ public class ItemEntry extends AppCompatActivity {
     private boolean submitted = false;
 
     private Food f;
+
+    private String[] foodIcons;
+    private ArrayList<String> iconList;
 
     private ImageView foodFormImageView;
     private TextView foodFormName;
@@ -48,6 +56,8 @@ public class ItemEntry extends AppCompatActivity {
         foodFormName = findViewById(R.id.foodNameTextView);
         foodFormExpiration = findViewById(R.id.expirationDateTextView);
 
+        foodFormImageView.setTag(R.drawable.food_misc);
+
         setupEventListeners(foodFormExpiration);
 
         // Check if UPC scan flow
@@ -57,10 +67,24 @@ public class ItemEntry extends AppCompatActivity {
         if (imageID != 0 && !productName.equals("")) {
             foodFormName.setText(productName);
             foodFormImageView.setImageResource(imageID);
+            foodFormImageView.setTag(imageID);
 
             f = new Food(productName, new Date());
             f.setPictureID(imageID);
         }
+
+        // Populate food icon choices
+        Field[] drawablesFields = com.adeemm.expiry.R.drawable.class.getFields();
+        iconList = new ArrayList<>();
+        for (Field field : drawablesFields) {
+            try {
+                if (field.getName().contains("food_")) {
+                    iconList.add(field.getName().replace("food_", ""));
+                }
+            }
+            catch (Exception ignored) {}
+        }
+        foodIcons = iconList.toArray(new String[0]);
     }
 
     public void onSubmitClick(View view) {
@@ -136,5 +160,23 @@ public class ItemEntry extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void showImagePicker(View view) {
+        String currDrawableName = getResources().getResourceEntryName((int)foodFormImageView.getTag());
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setSingleChoiceItems(foodIcons, iconList.indexOf(currDrawableName.replace("food_", "")), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+                int drawableID = getResources().getIdentifier("food_" + foodIcons[which], "drawable", getPackageName());
+                foodFormImageView.setImageDrawable(ContextCompat.getDrawable(ItemEntry.this, drawableID));
+                foodFormImageView.setTag(drawableID);
+            }
+        });
+        builder.show();
     }
 }
