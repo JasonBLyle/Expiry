@@ -7,11 +7,12 @@ public class Food {
     private String name;
     private String category;
     private Date expiration;
-
+    private int pictureID;
     public Food(String name, String category, Date expiration) {
         this.name = name;
         this.category = category;
         this.expiration = expiration;
+        this.pictureID = 0;
     }
 
     public String getName() {
@@ -27,6 +28,14 @@ public class Food {
     }
 
     public int getYear(){return expiration.getYear();}
+
+    public int getPictureID() {
+        return pictureID;
+    }
+
+    public void setPictureID(int pictureID) {
+        this.pictureID = pictureID;
+    }
 
     public int getMonth(){return expiration.getMonth();}
 
