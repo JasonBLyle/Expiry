@@ -13,7 +13,7 @@ public class Food {
 
     public Food(String name, Date expiration) {
         this.name = name;
-        this.category = category;
+        this.category = "";
         this.expiration = expiration;
         this.pictureID = 0;
 

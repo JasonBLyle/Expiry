@@ -62,12 +62,12 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         values.put(ExpirationDatabase.FoodTable.DAY,1);
         return db.insert(ExpirationDatabase.FoodTable.TABLE,null,values);
     }
-    public long addFood(Food newFood,int PictureID){
+    public long addFood(Food newFood){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(ExpirationDatabase.FoodTable.NAME,newFood.getName());
-        values.put(ExpirationDatabase.FoodTable.PICTURE,PictureID);
+        values.put(ExpirationDatabase.FoodTable.PICTURE,newFood.getPictureID());
         values.put(ExpirationDatabase.FoodTable.CATEGORY,newFood.getCategory());
         values.put(ExpirationDatabase.FoodTable.YEAR,newFood.getYear());
         values.put(ExpirationDatabase.FoodTable.MONTH,newFood.getMonth());
