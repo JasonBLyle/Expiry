@@ -25,6 +25,8 @@ import java.util.Map;
 
 public class SearchResults extends AppCompatActivity {
 
+    private String clickedItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,7 @@ public class SearchResults extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String clickedItem = searchResults.get(position);
+                clickedItem = searchResults.get(position);
                 Uri uri = passedResults.get(clickedItem);
                 api.getExpiration(uri, SearchResults.this::apiCallback);
             }
@@ -61,6 +63,40 @@ public class SearchResults extends AppCompatActivity {
     }
 
     public void apiCallback(String expiration) {
-        Log.e("FOUND!!! ", expiration);
+        if (!expiration.contains("after")) {
+            int amount = Character.getNumericValue(expiration.charAt(0));
+
+            if (expiration.contains("day")) {
+
+            }
+            else if (expiration.contains("week")) {
+
+            }
+            else if (expiration.contains("year")) {
+
+            }
+        }
+
+        Log.e("Expiration Found", expiration);
+
+        int resID = 0;
+
+        for (String word : clickedItem.split("\\W+") ) {
+            int resource = this.getResources().getIdentifier("food_" + word.toLowerCase(), "drawable", this.getPackageName());
+
+            if (resource != 0) {
+                resID = resource;
+                clickedItem = word;
+                break;
+            }
+        }
+
+        Intent intent = new Intent(this, ItemEntry.class);
+        intent.putExtra("FOOD_NAME", clickedItem);
+
+        if (resID != 0)
+            intent.putExtra("FOOD_PIC", resID);
+
+        startActivity(intent);
     }
 }

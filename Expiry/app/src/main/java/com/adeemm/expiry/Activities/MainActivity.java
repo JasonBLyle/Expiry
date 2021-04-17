@@ -6,10 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.adeemm.expiry.AnimationHelper;
-import com.adeemm.expiry.ItemEntry;
 import com.adeemm.expiry.ListAdapter;
 import com.adeemm.expiry.Models.BarcodeAPI;
-import com.adeemm.expiry.Models.ExpirationAPI;
 import com.adeemm.expiry.Models.ExpirationDatabase;
 import com.adeemm.expiry.Models.Food;
 import com.adeemm.expiry.Models.ListItem;
@@ -27,10 +25,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;

@@ -1,10 +1,9 @@
-package com.adeemm.expiry;
+package com.adeemm.expiry.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -20,10 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adeemm.expiry.Models.Food;
+import com.adeemm.expiry.R;
+import com.adeemm.expiry.Utils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -97,6 +97,7 @@ public class ItemEntry extends AppCompatActivity {
                 if (f != null) {
                     f.setName(foodFormName.getText().toString());
                     f.setExpiration(selectedExpirationDate);
+                    f.setPictureID((int)foodFormImageView.getTag());
                 }
                 else {
                     f = new Food(foodFormName.getText().toString(), selectedExpirationDate);

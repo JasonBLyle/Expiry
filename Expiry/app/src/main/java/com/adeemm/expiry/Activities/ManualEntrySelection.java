@@ -7,10 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.widget.Toast;
-
 import com.adeemm.expiry.Fragments.ManualEntrySelectionFragment;
-import com.adeemm.expiry.ItemEntry;
 import com.adeemm.expiry.R;
 
 

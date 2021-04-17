@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Expiry">
         <activity android:name=".Activities.SearchResults"></activity>
         <activity android:name=".Activities.Search" />
-        <activity android:name=".ItemEntry" />
+        <activity android:name=".Activities.ItemEntry" />
         <activity android:name=".Activities.ManualEntrySelection" />
         <activity
             android:name=".Activities.MainActivity"
