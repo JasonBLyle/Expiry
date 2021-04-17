@@ -44,7 +44,25 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         db.execSQL(createTableStatement);
     }
 
-    public void addFood (Food newFood) {
+    public long addFood(){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        Date today = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(today);
+        c.add(Calendar.DATE,60);
+        Date temptest = c.getTime();
+        int temp = R.drawable.food_apple;
+        values.put(ExpirationDatabase.FoodTable.NAME,"Apple");
+        values.put(ExpirationDatabase.FoodTable.PICTURE, temp);
+        values.put(ExpirationDatabase.FoodTable.CATEGORY,"Fruit");
+        values.put(ExpirationDatabase.FoodTable.YEAR,2021-1900);
+        values.put(ExpirationDatabase.FoodTable.MONTH,10);
+        values.put(ExpirationDatabase.FoodTable.DAY,1);
+        return db.insert(ExpirationDatabase.FoodTable.TABLE,null,values);
+    }
+    public long addFood(Food newFood){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -54,45 +72,38 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         values.put(ExpirationDatabase.FoodTable.YEAR,newFood.getYear());
         values.put(ExpirationDatabase.FoodTable.MONTH,newFood.getMonth());
         values.put(ExpirationDatabase.FoodTable.DAY,newFood.getDay());
-
-        db.insert(ExpirationDatabase.FoodTable.TABLE,null,values);
-        db.close();
+        return db.insert(ExpirationDatabase.FoodTable.TABLE,null,values);
     }
 
-    public void removeFood (Food newFood) {
+    public boolean deleteFood(Food food){
         SQLiteDatabase db = getWritableDatabase();
+        String queryString = "DELETE FROM " + ExpirationDatabase.FoodTable.TABLE + " WHERE " + ExpirationDatabase.FoodTable.NAME + " = " + food.getName();
 
-        String name = newFood.getName();
-        int year = newFood.getYear();
-        int month = newFood.getMonth();
-        int day = newFood.getDay();
+        Cursor cursor = db.rawQuery(queryString,null);
 
-        String table_name = FoodTable.NAME;
-        String table_year = FoodTable.YEAR;
-        String table_month = FoodTable.MONTH;
-        String table_day = FoodTable.DAY;
-
-        String whereClause = String.format("%s = '%s' AND %s = %d AND %s = %d AND %s = %d", table_name, name, table_year, year, table_month, month, table_day, day);
-
-        db.delete(ExpirationDatabase.FoodTable.TABLE, whereClause, null);
-        db.close();
+        if(cursor.moveToFirst()){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion,
+                          int newVersion) {
         db.execSQL("drop table if exists " + ExpirationDatabase.FoodTable.TABLE);
         onCreate(db);
     }
-
-    public List<Food> getAll() {
+    public List<Food> getAll(){
         List<Food> returnList = new ArrayList<>();
         String queryString = "SELECT * FROM " + ExpirationDatabase.FoodTable.TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(queryString,null);
 
-        if(cursor.moveToFirst()) {
-            do {
+        if(cursor.moveToFirst()){
+            do{
                 int experiationID = cursor.getInt(0);
                 String name = cursor.getString(1);
                 String category = cursor.getString(2);
@@ -100,16 +111,16 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                 int year = cursor.getInt(4);
                 int month = cursor.getInt(5);
                 int day = cursor.getInt(6);
-
-                Calendar cal = Calendar.getInstance();
-                cal.set(year, month, day);
-                Food tempFood = new Food(name, cal.getTime());
+                Date tempDate = new Date(year,month,day);
+                Food tempFood = new Food(name,tempDate);
                 tempFood.setPictureID(pictureID);
                 returnList.add(tempFood);
-            } while(cursor.moveToNext());
+            }while(cursor.moveToNext());
+        }
+        else{
+            //returns an empty list
         }
 
-        db.close();
         return returnList;
     }
 }
