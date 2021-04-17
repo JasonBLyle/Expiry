@@ -11,6 +11,7 @@ import com.adeemm.expiry.Models.BarcodeAPI;
 import com.adeemm.expiry.Models.ExpirationDatabase;
 import com.adeemm.expiry.Models.Food;
 import com.adeemm.expiry.Models.ListItem;
+import com.adeemm.expiry.Models.PresetDatabase;
 import com.adeemm.expiry.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
         overlay = findViewById(R.id.overlay);
         overlay.setVisibility(View.GONE);
+
+        PresetDatabase presetDatabase = new PresetDatabase(MainActivity.this);
+        presetDatabase.checkEmpty();
 
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override

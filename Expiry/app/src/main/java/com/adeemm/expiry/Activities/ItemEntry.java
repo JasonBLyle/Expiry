@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adeemm.expiry.Models.ExpirationDatabase;
 import com.adeemm.expiry.Models.Food;
 import com.adeemm.expiry.R;
 import com.adeemm.expiry.Utils;
@@ -104,9 +105,14 @@ public class ItemEntry extends AppCompatActivity {
                     f.setPictureID(R.drawable.food_misc);
                 }
 
-                // TODO: save food
-
+                ExpirationDatabase dataBaseHelper = new ExpirationDatabase(ItemEntry.this);
+                dataBaseHelper.addFood(f);
                 f = null;
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+
+
+
             }
         }
         else {
