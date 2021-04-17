@@ -34,6 +34,7 @@ public class ItemEntry extends AppCompatActivity {
     private boolean submitted = false;
 
     private Food f;
+    private ExpirationDatabase database;
 
     private String[] foodIcons;
     private ArrayList<String> iconList;
@@ -61,17 +62,28 @@ public class ItemEntry extends AppCompatActivity {
 
         setupEventListeners(foodFormExpiration);
 
-        // Check if UPC scan flow
-        Intent intent = getIntent();
-        String productName = intent.getStringExtra("FOOD_NAME");
-        int imageID = intent.getIntExtra("FOOD_PIC", 0);
-        if (imageID != 0 && !productName.equals("")) {
-            foodFormName.setText(productName);
-            foodFormImageView.setImageResource(imageID);
-            foodFormImageView.setTag(imageID);
+        database = new ExpirationDatabase(this);
 
-            f = new Food(productName, new Date());
-            f.setPictureID(imageID);
+        // Check if UPC scan or search flow
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            String productName = intent.getStringExtra("FOOD_NAME");
+            int imageID = intent.getIntExtra("FOOD_PIC", 0);
+            long expirationDateTime = intent.getLongExtra("FOOD_EXP", -1);
+            if (!productName.equals("")) {
+                foodFormName.setText(productName);
+            }
+            if (imageID != 0) {
+                foodFormImageView.setImageResource(imageID);
+                foodFormImageView.setTag(imageID);
+            }
+            if (expirationDateTime != -1) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(expirationDateTime);
+                selectedExpirationDate = cal.getTime();
+                foodFormExpiration.setText(Utils.getFormattedDate(expirationDateTime));
+            }
         }
 
         // Populate food icon choices
@@ -95,24 +107,16 @@ public class ItemEntry extends AppCompatActivity {
                 ((ProgressBar)findViewById(R.id.searchProgressBar)).setVisibility(View.VISIBLE);
                 ((View)findViewById(R.id.item_entry_form)).setVisibility(View.GONE);
 
-                if (f != null) {
-                    f.setName(foodFormName.getText().toString());
-                    f.setExpiration(selectedExpirationDate);
-                    f.setPictureID((int)foodFormImageView.getTag());
-                }
-                else {
-                    f = new Food(foodFormName.getText().toString(), selectedExpirationDate);
-                    f.setPictureID(R.drawable.food_misc);
-                }
+                f = new Food(foodFormName.getText().toString(), selectedExpirationDate);
+                f.setPictureID((int)foodFormImageView.getTag());
 
-                ExpirationDatabase dataBaseHelper = new ExpirationDatabase(ItemEntry.this);
-                dataBaseHelper.addFood(f);
+                database.addFood(f);
                 f = null;
-                Intent intent = new Intent(this,MainActivity.class);
+
+                // Return to home screen
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-
-
-
             }
         }
         else {

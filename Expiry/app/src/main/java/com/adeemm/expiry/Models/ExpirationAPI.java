@@ -93,8 +93,7 @@ public class ExpirationAPI {
                     Document doc = Jsoup.parse(response);
                     Elements nodes = doc.select(".food-storage-container > .food-inside");
                     String expiration = nodes.get(0).select(".food-storage-right > .red-image > span").text();
-                    Log.e("Expiration:", expiration);
-                    // TODO: callback
+                    callback.accept(expiration);
                 }
             },
             new Response.ErrorListener() {

@@ -11,7 +11,6 @@ import com.adeemm.expiry.Models.BarcodeAPI;
 import com.adeemm.expiry.Models.ExpirationDatabase;
 import com.adeemm.expiry.Models.Food;
 import com.adeemm.expiry.Models.ListItem;
-import com.adeemm.expiry.Models.PresetDatabase;
 import com.adeemm.expiry.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private View fab_manual_view;
 
     private BarcodeAPI api;
+    private ExpirationDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Expiry");
         setSupportActionBar(toolbar);
+
+        database = new ExpirationDatabase(this);
 
         FloatingActionButton mainButton = (FloatingActionButton) findViewById(R.id.fab_main_button);
 
@@ -68,9 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         overlay = findViewById(R.id.overlay);
         overlay.setVisibility(View.GONE);
-
-        PresetDatabase presetDatabase = new PresetDatabase(MainActivity.this);
-        presetDatabase.checkEmpty();
 
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,9 +109,6 @@ public class MainActivity extends AppCompatActivity {
         ((FloatingActionButton) findViewById(R.id.fab_manual_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //ExpirationDatabase dataBaseHelper = new ExpirationDatabase(MainActivity.this);
-                //Food temp = new Food("Apple", "Produce", new Date());
-                //dataBaseHelper.addFood();
                 Intent intent = new Intent(view.getContext(), ManualEntrySelection.class);
                 startActivity(intent);
             }
@@ -198,23 +194,13 @@ public class MainActivity extends AppCompatActivity {
         ExpirationDatabase expirationDatabase = new ExpirationDatabase(MainActivity.this);
         List<Food> foods = expirationDatabase.getAll();
 
-//        Date temp = new Date(21+100,4,12);
-//        Food f1 = new Food("Apple",  new Date());
-//        Food f2 = new Food("Orange", new Date());
-//        Food f3 = new Food("Grapes", new Date());
-//        Food f4 = new Food("Grapes",  temp);
-//
         List<ListItem> items = new ArrayList<>();
-//        items.add(0, new ListItem("Section 1", true));
-//        items.add(1, new ListItem(f1));
-//        items.add(2, new ListItem(f2));
-//        items.add(3, new ListItem("Section 2", true));
-//        items.add(4, new ListItem(f3));
-//        items.add(5, new ListItem(f4));
-//
-//        for(int i = 0; i < foods.size(); i++) {
-//            items.add(i + 6, new ListItem(foods.get(i)));
-//        }
+
+        // TODO: sort by expiration
+        for(int i = 0; i < foods.size(); i++) {
+            items.add(i, new ListItem(foods.get(i)));
+            //items.add(idx, new ListItem("Section 1", true));
+        }
 
         ListAdapter adapter = new ListAdapter(this, items);
         recyclerView.setAdapter(adapter);
@@ -222,7 +208,9 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, ListItem obj, int position) {
-                // TODO: Handle click?
+                database.removeFood(items.get(position).getFood());
+                items.remove(position);
+                adapter.notifyDataSetChanged();
             }
         });
     }
