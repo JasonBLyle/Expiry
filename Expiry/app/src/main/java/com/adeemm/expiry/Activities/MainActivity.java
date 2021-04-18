@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -191,12 +192,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        ExpirationDatabase expirationDatabase = new ExpirationDatabase(MainActivity.this);
-        List<Food> foods = expirationDatabase.getAll();
+        List<Food> foods = database.getAll();
 
         List<ListItem> items = new ArrayList<>();
+        foods.sort(Comparator.comparing(Food::getExpiration));
 
-        // TODO: sort by expiration
         for(int i = 0; i < foods.size(); i++) {
             items.add(i, new ListItem(foods.get(i)));
             //items.add(idx, new ListItem("Section 1", true));

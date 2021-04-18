@@ -55,7 +55,6 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
 
         Date today = new Date();
         Calendar c = Calendar.getInstance();
-        c.setTime(today);
 
         long diffInMillies = Math.abs(today.getTime() - newFood.getDate().getTime());
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
@@ -65,9 +64,9 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         values.put(ExpirationDatabase.FoodTable.NAME,newFood.getName());
         values.put(ExpirationDatabase.FoodTable.PICTURE,newFood.getPictureID());
         values.put(ExpirationDatabase.FoodTable.CATEGORY,newFood.getCategory());
-        values.put(ExpirationDatabase.FoodTable.YEAR,c.get(Calendar.YEAR)-1900);
-        values.put(ExpirationDatabase.FoodTable.MONTH,c.get(Calendar.MONTH));
-        values.put(ExpirationDatabase.FoodTable.DAY,c.get(Calendar.DAY_OF_MONTH));
+        values.put(ExpirationDatabase.FoodTable.YEAR,newFood.getYear());
+        values.put(ExpirationDatabase.FoodTable.MONTH,newFood.getMonth());
+        values.put(ExpirationDatabase.FoodTable.DAY,newFood.getDay());
         values.put(ExpirationDatabase.FoodTable.REMAINING_DAYS,temp);
         values.put(ExpirationDatabase.FoodTable.FREEZE_MULTIPIER,2);
         values.put(ExpirationDatabase.FoodTable.FROZEN,0);
@@ -80,9 +79,9 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         String name = newFood.getName();
-        int year = newFood.getYear() -1900;
+        int year = newFood.getYear();
         int month = newFood.getMonth();
-        int day = newFood.getDay()-newFood.getrDays();
+        int day = newFood.getDay();
 
         String table_name = FoodTable.NAME;
         String table_year = FoodTable.YEAR;
@@ -246,6 +245,7 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         db.execSQL("drop table if exists " + ExpirationDatabase.FoodTable.TABLE);
         onCreate(db);
     }
+
     public List<Food> getAll(){
         List<Food> returnList = new ArrayList<>();
         String queryString = "SELECT * FROM " + ExpirationDatabase.FoodTable.TABLE;
@@ -265,18 +265,17 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                 int rDays = cursor.getInt(7);
                 int freez_M = cursor.getInt(8);
                 int frozen = cursor.getInt(9);
-                Date tempDate = new Date(year,month,day);
+
                 Calendar c = Calendar.getInstance();
-                c.setTime(tempDate);
-                if(frozen != 0){
+                c.set(year, month, day);
+
+                if(frozen != 0) {
                     c.add(Calendar.DATE,rDays*freez_M);
                 }
-                else {
-                    c.add(Calendar.DATE, rDays);
-                }
+
                 Date exDate = c.getTime();
-                Food tempFood = new Food(name,exDate);
-                if(frozen != 0){
+                Food tempFood = new Food(name, exDate);
+                if(frozen != 0) {
                     tempFood.setFrozen(true);
                 }
                 else {

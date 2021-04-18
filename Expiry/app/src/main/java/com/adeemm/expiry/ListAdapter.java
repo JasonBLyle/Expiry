@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.adeemm.expiry.Models.ListItem;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -84,7 +86,17 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             view.name.setText(item.getName());
 
             if (item.getFood() != null) {
-                view.description.setText(item.getFood().getExpiration().toString());
+                String detailsText;
+                int days = Math.abs(Math.round(ChronoUnit.DAYS.between(item.getFood().getExpiration().toInstant(), new Date().toInstant())));
+
+                if (item.getFood().getExpiration().before(new Date())) {
+                    detailsText = String.format("Expired %d day(s) ago!", days);
+                }
+                else {
+                    detailsText = String.format("Expiring in %d day(s)", days);
+                }
+
+                view.description.setText(detailsText);
 
                 int resID = item.getFood().getPictureID();
 
