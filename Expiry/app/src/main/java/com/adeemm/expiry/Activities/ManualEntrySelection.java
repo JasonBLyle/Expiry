@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.adeemm.expiry.Fragments.ManualEntrySelectionFragment;
 import com.adeemm.expiry.R;
 
+/**
+ * This is the activity that select the way the user wants to add an item to the database
+ */
 
 public class ManualEntrySelection extends AppCompatActivity {
 
