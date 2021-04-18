@@ -274,12 +274,7 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                 Date tempDate = new Date(year,month,day);
                 Calendar c = Calendar.getInstance();
                 c.setTime(tempDate);
-                if(frozen != 0){
-                    c.add(Calendar.DATE,rDays*freez_M);
-                }
-                else {
-                    c.add(Calendar.DATE, rDays);
-                }
+                c.add(Calendar.DATE, rDays);
                 Date exDate = c.getTime();
                 Food tempFood = new Food(name,exDate);
                 if(frozen != 0){
