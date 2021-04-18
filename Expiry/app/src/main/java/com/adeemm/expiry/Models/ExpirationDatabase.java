@@ -15,11 +15,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This is the database that holds the user's food
+ */
 public class ExpirationDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "expirations.db";
     private static final int VERSION = 3;
-
+    /**
+     * this function creates a reference to this database
+     * @param context is the activity calling the database
+     */
     public ExpirationDatabase(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
@@ -37,7 +43,10 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         private static final String FREEZE_MULTIPIER = "f_mult";
         private static final String FROZEN = "frozen";
     }
-
+    /**
+     *  This function creates the database
+     * @param db is this database
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableStatement = "create table " + ExpirationDatabase.FoodTable.TABLE + " (" +
@@ -50,6 +59,11 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         db.execSQL(createTableStatement);
     }
 
+    /**
+     * Pre: newFood is a food
+     * Post: newFood is in the database
+     * @param newFood is the food being added to the database
+     */
     public void addFood(Food newFood) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -76,6 +90,11 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Pre:newFood is the food being removed
+     * Post: newFood has been removed from the database
+     * @param newFood is the food being removed
+     */
     public void removeFood (Food newFood) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -95,6 +114,12 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Pre:Food is the food being frozen or unfrozen
+     * Post: Food's remaining days have been changed and its frozen status has changed
+     * @param food is the food being frozen
+     * @return food is the food after being modified to either being frozen or unfrozen
+     */
     public Food freezeFood(Food food){
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = db.rawQuery("Select * from FOOD where Food = ?",new String[]{food.getName()});
@@ -149,14 +174,10 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                     }
                 }
                 else {
-
                 }
                 db.close();
                 return food;
-
-
             }while(cursor.moveToNext());
-
         }
         else{
 
@@ -165,6 +186,10 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         return food;
     }
 
+    /**
+     * Goes through the database and updates the remaining days
+     * @return whether the list has been updated
+     */
     public boolean updateList(){
         String queryString = "SELECT * FROM " + ExpirationDatabase.FoodTable.TABLE;
         SQLiteDatabase db = getWritableDatabase();
@@ -232,7 +257,6 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                     cv.put(ExpirationDatabase.FoodTable.REMAINING_DAYS,rDays);
                     db.update(ExpirationDatabase.FoodTable.TABLE,cv,"_id = ?",new String[]{String.valueOf(experiationID)});
                 }
-
             }while(cursor.moveToNext());
             db.close();
             return true;
@@ -241,17 +265,21 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
             db.close();
             return false;
         }
-
-
     }
 
+    /**
+     * This function updgrades the database if the database parameters was changes
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion,
                           int newVersion) {
         db.execSQL("drop table if exists " + ExpirationDatabase.FoodTable.TABLE);
         onCreate(db);
     }
-
+    /**
+     * Pre: the database has been initialized
+     * Post: return = all the presets in the database
+     */
     public List<Food> getAll(){
         List<Food> returnList = new ArrayList<>();
         String queryString = "SELECT * FROM " + ExpirationDatabase.FoodTable.TABLE;
