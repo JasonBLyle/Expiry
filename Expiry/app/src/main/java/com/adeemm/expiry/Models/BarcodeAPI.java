@@ -14,21 +14,35 @@ import org.json.JSONObject;
 
 import java.util.function.Consumer;
 
-
+/**
+ * This is the class that calls the openfoodfacts api with the barcode from the capture class
+ * to find out what item was scanned.
+ */
 public class BarcodeAPI {
     private final String baseURL = "https://world.openfoodfacts.org/api/v0/product/";
     private final Activity instance;
     private final RequestQueue rq;
-
+    /**
+     * This is the constructor for the ExpirationAPI class
+     */
     public BarcodeAPI(Activity obj) {
         this.rq = Volley.newRequestQueue(obj);
         this.instance = obj;
     }
 
+    /**
+     * Pre:UPC is the string with the UPC of the item
+     * @param UPC is the barcode scanned in
+     * @return the url for the product scanned
+     */
     public Uri getURL(String UPC) {
         return Uri.parse(baseURL + UPC + ".json");
     }
 
+    /**
+     * Pre: url is the url for the product we are looking up
+     * Post: the response is recoded and used in the other api
+     */
     public void getData(Uri url, Consumer<JSONObject> callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url.toString(), null, new Response.Listener<JSONObject>() {

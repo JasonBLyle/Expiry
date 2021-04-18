@@ -25,17 +25,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * This is model to get the expiration date api from stilltasty.com
+ */
 
 public class ExpirationAPI {
     private final String searchURL = "https://stilltasty.com/searchitems/search";
     private final Activity instance;
     private final RequestQueue rq;
 
+    /**
+     * This is the constructor for the ExpirationAPI class
+     */
     public ExpirationAPI(Activity obj) {
         this.rq = Volley.newRequestQueue(obj);
         this.instance = obj;
     }
 
+    /**
+     * Pre:query contains a name.
+     * callback is the response from the api.
+     */
     public void getSearchResults(String query, Consumer<Map<String, Uri>> callback) {
         rq.getCache().clear();
 
@@ -86,6 +96,9 @@ public class ExpirationAPI {
         rq.add(request);
     }
 
+    /**
+     * this function receives the response from the api and parses it into somthing we can use
+     */
     public void getExpiration(Uri uri, Consumer<String> callback) {
         StringRequest request = new StringRequest(Request.Method.GET, uri.toString(), new Response.Listener<String>() {
                 @Override
