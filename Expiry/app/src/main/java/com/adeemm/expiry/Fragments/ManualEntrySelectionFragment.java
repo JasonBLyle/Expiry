@@ -3,6 +3,8 @@ package com.adeemm.expiry.Fragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
 
+import com.adeemm.expiry.Activities.ManualEntrySelection;
 import com.adeemm.expiry.R;
 
 
@@ -53,6 +56,16 @@ public class ManualEntrySelectionFragment extends DialogFragment {
                 optionClickHandler(2);
             }
         });
+
+        // Go back to MainActivity instead of empty activity that launched this dialog fragment
+        // When back button is pressed
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                getActivity().finish();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
         return rootView;
     }

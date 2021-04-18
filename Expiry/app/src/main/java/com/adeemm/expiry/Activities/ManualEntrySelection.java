@@ -3,6 +3,8 @@ package com.adeemm.expiry.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,8 @@ public class ManualEntrySelection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_entry_selection);
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         ManualEntrySelectionFragment newFragment = new ManualEntrySelectionFragment();

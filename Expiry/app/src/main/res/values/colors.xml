@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1976D2</color>
-    <color name="main_blue">#0D47A1</color>
+    <color name="colorPrimary">#74a680</color>
+    <color name="main_green">#46887E</color>
+    <color name="alt_green">#00a987</color>
 
     <color name="dark_overlay">#4D000000</color>
     <color name="light_overlay">#1AFFFFFF</color>

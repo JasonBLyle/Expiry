@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D47A1"
+    android:background="#005b4c"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -70,7 +70,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:tint="@color/colorPrimary"
+                        app:tint="@color/alt_green"
                         app:srcCompat="@drawable/oval" />
 
                     <ImageView
@@ -152,7 +152,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:tint="@color/colorPrimary"
+                        app:tint="@color/alt_green"
                         app:srcCompat="@drawable/oval" />
 
                     <ImageView
@@ -234,7 +234,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:tint="@color/colorPrimary"
+                        app:tint="@color/alt_green"
                         app:srcCompat="@drawable/oval" />
 
                     <ImageView
