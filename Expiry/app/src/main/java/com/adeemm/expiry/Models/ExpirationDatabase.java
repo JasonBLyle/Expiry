@@ -55,6 +55,7 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
 
         Date today = new Date();
         Calendar c = Calendar.getInstance();
+        c.setTime(today);
 
         long diffInMillies = Math.abs(today.getTime() - newFood.getDate().getTime());
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
@@ -64,9 +65,9 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         values.put(ExpirationDatabase.FoodTable.NAME,newFood.getName());
         values.put(ExpirationDatabase.FoodTable.PICTURE,newFood.getPictureID());
         values.put(ExpirationDatabase.FoodTable.CATEGORY,newFood.getCategory());
-        values.put(ExpirationDatabase.FoodTable.YEAR,newFood.getYear());
-        values.put(ExpirationDatabase.FoodTable.MONTH,newFood.getMonth());
-        values.put(ExpirationDatabase.FoodTable.DAY,newFood.getDay());
+        values.put(ExpirationDatabase.FoodTable.YEAR,c.get(Calendar.YEAR)-1900);
+        values.put(ExpirationDatabase.FoodTable.MONTH,c.get(Calendar.MONTH));
+        values.put(ExpirationDatabase.FoodTable.DAY,c.get(Calendar.DAY_OF_MONTH));
         values.put(ExpirationDatabase.FoodTable.REMAINING_DAYS,temp);
         values.put(ExpirationDatabase.FoodTable.FREEZE_MULTIPIER,2);
         values.put(ExpirationDatabase.FoodTable.FROZEN,0);
@@ -79,9 +80,9 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         String name = newFood.getName();
-        int year = newFood.getYear();
+        int year = newFood.getYear() -1900;
         int month = newFood.getMonth();
-        int day = newFood.getDay();
+        int day = newFood.getDay()-newFood.getrDays();
 
         String table_name = FoodTable.NAME;
         String table_year = FoodTable.YEAR;
@@ -95,10 +96,8 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
     }
 
     public Food freezeFood(Food food){
-        String queryString = "SELECT FROM " + ExpirationDatabase.FoodTable.TABLE + " WHERE " + ExpirationDatabase.FoodTable.NAME + " = " + food.getName();
         SQLiteDatabase db = getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(queryString,null);
+        Cursor cursor = db.rawQuery("Select * from FOOD where Food = ?",new String[]{food.getName()});
 
         if(cursor.moveToFirst()){
             do{
@@ -120,30 +119,37 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                     tempbool=false;
                 }
                 if( food.isFrozen()==tempbool){
-                }
-                else {
                     Date today = new Date(year,month,day);
                     Calendar c = Calendar.getInstance();
                     c.setTime(today);
 
-                    if(food.isFrozen()){
+                    if(!food.isFrozen()){
+                        frozen =1;
+                        food.setFrozen(true);
                         c.add(Calendar.DATE,rDays*freez_M);
                         food.setExpiration(c.getTime());
                         ContentValues cv = new ContentValues();
                         cv.put(ExpirationDatabase.FoodTable.FROZEN,1);
                         cv.put(ExpirationDatabase.FoodTable.REMAINING_DAYS,rDays*freez_M);
+                        cv.put(ExpirationDatabase.FoodTable.FROZEN,frozen);
                         food.setrDays(rDays*freez_M);
                         db.update(ExpirationDatabase.FoodTable.TABLE,cv,"_id = ?",new String[]{String.valueOf(experiationID)});
                     }
                     else{
+                        frozen =0;
+                        food.setFrozen(false);
                         c.add(Calendar.DATE,rDays/freez_M);
                         food.setExpiration(c.getTime());
                         ContentValues cv = new ContentValues();
                         cv.put(ExpirationDatabase.FoodTable.FROZEN,0);
                         cv.put(ExpirationDatabase.FoodTable.REMAINING_DAYS,rDays/freez_M);
+                        cv.put(ExpirationDatabase.FoodTable.FROZEN,frozen);
                         food.setrDays(rDays/freez_M);
                         db.update(ExpirationDatabase.FoodTable.TABLE,cv,"_id = ?",new String[]{String.valueOf(experiationID)});
                     }
+                }
+                else {
+
                 }
                 db.close();
                 return food;

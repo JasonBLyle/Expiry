@@ -25,7 +25,11 @@ public class ListItem {
         return isSection;
     }
 
+
+
     public Food getFood() {
         return food;
     }
+
+    public void setFood(Food f){this.food =f;}
 }
