@@ -25,6 +25,7 @@ public class PresetActivity extends AppCompatActivity {
 
         presetView = findViewById(R.id.presetView);
         PresetDatabase presetDatabase = new PresetDatabase(PresetActivity.this);
+        presetDatabase.checkEmpty();
 
         foods = presetDatabase.getAll();
 
