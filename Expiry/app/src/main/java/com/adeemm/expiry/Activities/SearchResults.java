@@ -66,12 +66,14 @@ public class SearchResults extends AppCompatActivity {
     public void apiCallback(String expiration) {
         Calendar cal = null;
         if (!expiration.contains("after")) {
-
             cal = Calendar.getInstance();
             int amount = Character.getNumericValue(expiration.charAt(0));
 
             if (expiration.contains("day")) {
                 cal.add(Calendar.DAY_OF_MONTH, amount);
+            }
+            else if (expiration.contains("week")) {
+                cal.add(Calendar.WEEK_OF_MONTH, amount);
             }
             else if (expiration.contains("month")) {
                 cal.add(Calendar.MONTH, amount);
