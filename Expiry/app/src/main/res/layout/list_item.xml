@@ -20,8 +20,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="15dp"
-            android:background="#FFFFFF"
-            android:backgroundTint="#FFFFFF"
+            android:background="#1AF3FA"
             android:drawableTint="@color/colorPrimary"
             android:src="@drawable/ic_expiration_alert" />
 
