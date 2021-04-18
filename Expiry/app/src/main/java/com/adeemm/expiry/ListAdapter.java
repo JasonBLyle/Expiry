@@ -86,18 +86,6 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             view.name.setText(item.getName());
 
             if (item.getFood() != null) {
-                String detailsText;
-                int days = Math.abs(Math.round(ChronoUnit.DAYS.between(item.getFood().getExpiration().toInstant(), new Date().toInstant())));
-
-                if (item.getFood().getExpiration().before(new Date())) {
-                    detailsText = String.format("Expired %d day(s) ago!", days);
-                }
-                else {
-                    detailsText = String.format("Expiring in %d day(s)", days);
-                }
-
-                view.description.setText(detailsText);
-
                 int resID = item.getFood().getPictureID();
 
                 if (resID == 0) {
@@ -105,6 +93,19 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 view.food_icon.setImageResource(resID);
+
+                String detailsText;
+                int days = Math.abs(Math.round(ChronoUnit.DAYS.between(item.getFood().getExpiration().toInstant(), new Date().toInstant())));
+
+                if (item.getFood().getExpiration().before(new Date())) {
+                    detailsText = String.format("Expired %d day(s) ago!", days);
+                    view.food_icon.setImageResource(R.drawable.ic_expiration_alert);
+                }
+                else {
+                    detailsText = String.format("Expiring in %d day(s)", days);
+                }
+
+                view.description.setText(detailsText);
             }
             else {
                 view.food_icon.setImageResource(R.drawable.food_misc);
