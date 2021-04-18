@@ -51,6 +51,8 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             name = (TextView) view.findViewById(R.id.name);
             description = (TextView) view.findViewById(R.id.description);
             freezeButton = view.findViewById(R.id.FreezeButton);
+
+
         }
     }
 
@@ -97,6 +99,12 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 view.food_icon.setImageResource(resID);
+                if(items.get(position).getFood().isFrozen()){
+                    view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.freeze_blue));
+                }
+                else {
+                    view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.white));
+                }
 
                 String detailsText;
                 int days = Math.abs(Math.round(ChronoUnit.DAYS.between(item.getFood().getExpiration().toInstant(), new Date().toInstant())));
@@ -129,6 +137,14 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ExpirationDatabase expirationDatabase = new ExpirationDatabase(ctx);
 
                     items.get(position).setFood(expirationDatabase.freezeFood(items.get(position).getFood()));
+                    if(items.get(position).getFood().isFrozen()){
+                        view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.freeze_blue));
+                    }
+                    else {
+                        view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.white));
+                    }
+
+
                     notifyDataSetChanged();
                 }
 
