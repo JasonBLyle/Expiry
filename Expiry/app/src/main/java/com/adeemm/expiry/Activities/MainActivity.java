@@ -34,7 +34,10 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
+/**
+ * This is the main activity of the app. This is where the user can see all thier foods and
+ * navigate to the page to add more.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private boolean fabToggled = false;
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         overlay = findViewById(R.id.overlay);
         overlay.setVisibility(View.GONE);
 
+        //This toggles the FAB
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 toggleFAB(view);
             }
         });
-
+        //This calls the camera button which launches the zxing capture activity after being called.
         ((FloatingActionButton) findViewById(R.id.fab_cam_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 intentIntegrator.initiateScan();
             }
         });
-
+        //This launches the microphone search activity
         ((FloatingActionButton) findViewById(R.id.fab_mic_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        //This launches the manual entry activity
         ((FloatingActionButton) findViewById(R.id.fab_manual_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
         initListItems();
     }
 
+    /**
+     *This is the response from ZXING's capture activity. It returns the barcode in the resultCode
+     * which we then parse to see if it is useful.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -135,6 +143,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Pre: response is the response from the api caller
+     * Post: if the response is valid then it will proceed to the item entry activity to finish adding the item
+     * @param response  is the response from the api caller
+     */
     public void productBarcodeHandler(JSONObject response) {
         try {
             JSONObject productInfo = response.getJSONObject("product");
@@ -169,6 +182,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function handles making the FAB appear and disappear
+     * @param view this is the view the FAB is in
+     */
     private void toggleFAB(View view) {
         fabToggled = AnimationHelper.rotateFAB(view, !fabToggled);
 
@@ -187,11 +204,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Pre:none
+     * Post:recyclerView holds all the items in the database
+     * This function loads the recyclerView with the items in the database and also checks to
+     * see if time has passed.
+     */
     private void initListItems() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
+        database.updateList();
         List<Food> foods = database.getAll();
 
         List<ListItem> items = new ArrayList<>();
