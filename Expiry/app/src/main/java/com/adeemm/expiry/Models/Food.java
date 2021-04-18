@@ -10,15 +10,34 @@ public class Food {
     private Date expiration;
     private int pictureID;
     private Calendar calendar;
+    private boolean frozen;
+    private int rDays;
 
     public Food(String name, Date expiration) {
         this.name = name;
         this.category = "";
         this.expiration = expiration;
         this.pictureID = 0;
-
+        this.frozen =false;
         this.calendar = Calendar.getInstance();
         this.calendar.setTime(expiration);
+        this.rDays = 0;
+    }
+
+    public void setrDays(int rDays) {
+        this.rDays = rDays;
+    }
+
+    public int getrDays() {
+        return rDays;
+    }
+
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
     }
 
     public String getName() {
@@ -46,6 +65,8 @@ public class Food {
     public void setName(String name) { this.name = name; }
 
     public void setCategory(String category) { this.category = category; }
+
+    public Date getDate(){return this.expiration;}
 
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
