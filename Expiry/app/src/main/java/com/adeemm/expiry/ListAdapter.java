@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adeemm.expiry.Models.ExpirationDatabase;
 import com.adeemm.expiry.Models.ListItem;
 
 import java.time.temporal.ChronoUnit;
@@ -40,6 +42,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public TextView name, description;
         public ImageView food_icon;
         public View parent_layout;
+        public ImageButton freezeButton;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -47,6 +50,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             food_icon = (ImageView) view.findViewById(R.id.expiration_icon);
             name = (TextView) view.findViewById(R.id.name);
             description = (TextView) view.findViewById(R.id.description);
+            freezeButton = view.findViewById(R.id.FreezeButton);
         }
     }
 
@@ -118,6 +122,18 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener.onItemClick(view, items.get(position), position);
                     }
                 }
+            });
+            ((ItemViewHolder) viewHolder).freezeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExpirationDatabase expirationDatabase = new ExpirationDatabase(ctx);
+
+                    items.get(position).setFood(expirationDatabase.freezeFood(items.get(position).getFood()));
+                    notifyDataSetChanged();
+                }
+
+
+
             });
         }
 
