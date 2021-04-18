@@ -18,9 +18,10 @@ import com.adeemm.expiry.ListAdapter;
 import com.adeemm.expiry.Models.ExpirationAPI;
 import com.adeemm.expiry.Models.ListItem;
 import com.adeemm.expiry.R;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -33,8 +34,8 @@ public class SearchResults extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
-        // TODO: fix and add include
-       // Toolbar toolbar = findViewById(R.id.toolbar3);
+        // TODO: fix and add includes
+        //Toolbar toolbar = findViewById(R.id.toolbar3);
         //toolbar.setTitle("Search Results");
         //setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,6 +66,7 @@ public class SearchResults extends AppCompatActivity {
 
     public void apiCallback(String expiration) {
         Calendar cal = null;
+
         if (!expiration.contains("after")) {
             cal = Calendar.getInstance();
             int amount = Character.getNumericValue(expiration.charAt(0));
@@ -83,7 +85,6 @@ public class SearchResults extends AppCompatActivity {
             }
         }
 
-
         int resID = 0;
 
         for (String word : clickedItem.split("\\W+") ) {
@@ -98,8 +99,10 @@ public class SearchResults extends AppCompatActivity {
 
         Intent intent = new Intent(this, ItemEntry.class);
         intent.putExtra("FOOD_NAME", clickedItem);
+
         if (cal != null)
             intent.putExtra("FOOD_EXP", cal.getTimeInMillis());
+
         if (resID != 0)
             intent.putExtra("FOOD_PIC", resID);
 

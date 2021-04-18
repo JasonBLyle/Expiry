@@ -24,9 +24,8 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
     Context context;
 
     public PresetAdapter(Context c, List<Food> foods){
-        context=c;
-        PresetFoods=foods;
-
+        context = c;
+        PresetFoods = foods;
     }
 
     @NonNull
@@ -34,7 +33,6 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
     public PresetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.preset_list_item,parent,false);
-
 
         return new PresetViewHolder(view);
     }
@@ -46,9 +44,13 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
         holder.presetLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Food f = PresetFoods.get(position);
+
                 Intent intent = new Intent(context, ItemEntry.class);
-                intent.putExtra("PRESET",1);
-                intent.putExtra("PRESET_POSITION",position);
+                intent.putExtra("FOOD_NAME", f.getName());
+                intent.putExtra("FOOD_EXP", f.getExpiration().getTime());
+                intent.putExtra("FOOD_PIC", f.getPictureID());
+
                 context.startActivity(intent);
             }
         });
@@ -59,8 +61,7 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
         return PresetFoods.size();
     }
 
-    public class PresetViewHolder extends RecyclerView.ViewHolder{
-
+    public class PresetViewHolder extends RecyclerView.ViewHolder {
         ImageView image1;
         TextView text1;
         ConstraintLayout presetLayout;
@@ -71,11 +72,5 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
             text1 = itemView.findViewById(R.id.textView);
             presetLayout = itemView.findViewById(R.id.presetLayout);
         }
-
-
-
     }
-
-
-
 }

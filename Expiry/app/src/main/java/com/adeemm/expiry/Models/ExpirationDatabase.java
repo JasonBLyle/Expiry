@@ -50,39 +50,17 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         db.execSQL(createTableStatement);
     }
 
-    public void addFood(){
-        SQLiteDatabase db = getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        Date today = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(today);
-        c.add(Calendar.DATE,60);
-        Date temptest = c.getTime();
-        int temp = R.drawable.food_apple;
-        values.put(ExpirationDatabase.FoodTable.NAME,"Apple");
-        values.put(ExpirationDatabase.FoodTable.PICTURE, temp);
-        values.put(ExpirationDatabase.FoodTable.CATEGORY,"Fruit");
-        values.put(ExpirationDatabase.FoodTable.YEAR,today.getYear());
-        values.put(ExpirationDatabase.FoodTable.MONTH,today.getMonth());
-        values.put(ExpirationDatabase.FoodTable.DAY,today.getDay());
-        values.put(ExpirationDatabase.FoodTable.REMAINING_DAYS,5);
-        values.put(ExpirationDatabase.FoodTable.FREEZE_MULTIPIER,2);
-        values.put(ExpirationDatabase.FoodTable.FROZEN,0);
-
-        db.insert(ExpirationDatabase.FoodTable.TABLE,null,values);
-        db.close();
-    }
-    public void addFood(Food newFood){
+    public void addFood(Food newFood) {
         SQLiteDatabase db = getWritableDatabase();
 
         Date today = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(today);
-     //   Date test = new Date(c.get(Calendar.YEAR)-1900,c.get(Calendar.MONTH),c.get(Calendar.DAY_OF_MONTH));
+
         long diffInMillies = Math.abs(today.getTime() - newFood.getDate().getTime());
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
         int temp = (int)diff + 1;
+
         ContentValues values = new ContentValues();
         values.put(ExpirationDatabase.FoodTable.NAME,newFood.getName());
         values.put(ExpirationDatabase.FoodTable.PICTURE,newFood.getPictureID());
@@ -98,19 +76,6 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean deleteFood(Food food){
-        SQLiteDatabase db = getWritableDatabase();
-        String queryString = "DELETE FROM " + ExpirationDatabase.FoodTable.TABLE + " WHERE " + ExpirationDatabase.FoodTable.NAME + " = " + food.getName();
-
-        Cursor cursor = db.rawQuery(queryString,null);
-
-        if(cursor.moveToFirst()){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
     public void removeFood (Food newFood) {
         SQLiteDatabase db = getWritableDatabase();
 

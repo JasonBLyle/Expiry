@@ -24,33 +24,19 @@ public class Food {
         this.rDays = 0;
     }
 
-    public void setrDays(int rDays) {
-        this.rDays = rDays;
-    }
+    public void setrDays(int rDays) { this.rDays = rDays; }
 
-    public int getrDays() {
-        return rDays;
-    }
+    public int getrDays() { return rDays; }
 
-    public boolean isFrozen() {
-        return frozen;
-    }
+    public boolean isFrozen() { return frozen; }
 
-    public void setFrozen(boolean frozen) {
-        this.frozen = frozen;
-    }
+    public void setFrozen(boolean frozen) { this.frozen = frozen; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public String getCategory() {
-        return category;
-    }
+    public String getCategory() { return category; }
 
-    public Date getExpiration() {
-        return expiration;
-    }
+    public Date getExpiration() { return expiration; }
 
     public int getYear(){ return this.calendar.get(Calendar.YEAR); }
 

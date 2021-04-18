@@ -59,7 +59,7 @@ public class Search extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Expiry");
+        toolbar.setTitle("Search");
         setSupportActionBar(toolbar);
 
         searchText = findViewById(R.id.searchTextBox);
@@ -106,7 +106,7 @@ public class Search extends AppCompatActivity {
         }
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
 
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -122,18 +122,21 @@ public class Search extends AppCompatActivity {
                 micButton.setColorFilter(Color.argb(255, 102, 102, 102));
                 searchText.setText(bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION).get(0));
                 searchText.setHint("Search for food");
+                speechRecognizer.stopListening();
             }
 
             @Override
             public void onEndOfSpeech() {
                 micButton.setColorFilter(Color.argb(255, 102, 102, 102));
                 searchText.setHint("Search for food");
+                speechRecognizer.stopListening();
             }
 
             @Override
             public void onError(int error) {
                 micButton.setColorFilter(Color.argb(255, 102, 102, 102));
                 searchText.setHint("Search for food");
+                speechRecognizer.stopListening();
             }
 
             @Override

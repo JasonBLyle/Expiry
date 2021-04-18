@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Expiry");
         setSupportActionBar(toolbar);
 
-        database = new ExpirationDatabase(MainActivity.this);
+        database = new ExpirationDatabase(this);
 
         FloatingActionButton mainButton = (FloatingActionButton) findViewById(R.id.fab_main_button);
 
@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         overlay = findViewById(R.id.overlay);
         overlay.setVisibility(View.GONE);
-
-
 
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,14 +191,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-
-        database.updateList();
-        List<Food> foods = database.getAll();
+        ExpirationDatabase expirationDatabase = new ExpirationDatabase(MainActivity.this);
+        List<Food> foods = expirationDatabase.getAll();
 
         List<ListItem> items = new ArrayList<>();
 
+        // TODO: sort by expiration
         for(int i = 0; i < foods.size(); i++) {
-            items.add(i , new ListItem(foods.get(i)));
+            items.add(i, new ListItem(foods.get(i)));
+            //items.add(idx, new ListItem("Section 1", true));
         }
 
         ListAdapter adapter = new ListAdapter(this, items);
@@ -209,9 +208,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, ListItem obj, int position) {
-                // TODO: Handle click?
                 database.removeFood(items.get(position).getFood());
-                //database.deleteFood(items.get(position).getFood());
                 items.remove(position);
                 adapter.notifyDataSetChanged();
             }

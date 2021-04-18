@@ -57,21 +57,22 @@ public class PresetDatabase  extends SQLiteOpenHelper {
             loadPresets();
             return 1;
         }
-
     }
-    public long addPreset(Food newFood,int days){
+
+    public void addPreset(Food newFood, int days){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        Date today = new Date();
-        int picid = R.drawable.food_apple;
         values.put(PresetDatabase.PresetTable.NAME,newFood.getName());
         values.put(PresetDatabase.PresetTable.CATEGORY,newFood.getCategory());
         values.put(PresetDatabase.PresetTable.DAYS,days);
-        values.put(PresetTable.PICTURE,picid);
-        return db.insert(PresetDatabase.PresetTable.TABLE,null,values);
+        values.put(PresetTable.PICTURE,newFood.getPictureID());
+
+        db.insert(PresetDatabase.PresetTable.TABLE,null,values);
+        db.close();
     }
-    public long addPreset(String name, String catagory, int pictureid, int days,int fm){
+
+    public void addPreset(String name, String catagory, int pictureid, int days,int fm){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -80,7 +81,9 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         values.put(PresetDatabase.PresetTable.PICTURE,pictureid);
         values.put(PresetDatabase.PresetTable.DAYS,days);
         values.put(PresetDatabase.PresetTable.FREEZE_MULTIPLIER,fm);
-        return db.insert(PresetDatabase.PresetTable.TABLE,null,values);
+
+        db.insert(PresetDatabase.PresetTable.TABLE,null,values);
+        db.close();
     }
 
     public List<Food> getAll() {
@@ -151,7 +154,7 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Bacom";
+        name = "Bacon";
         catagory = "Fruit";
         picid = R.drawable.food_bacon;
         days = 60;
@@ -214,7 +217,7 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Leftover bowl";
+        name = "Leftovers";
         catagory = "Fruit";
         picid = R.drawable.food_bowl;
         days = 60;
@@ -224,13 +227,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         name = "Bread";
         catagory = "Fruit";
         picid = R.drawable.food_bread;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Bread";
-        catagory = "Fruit";
-        picid = R.drawable.food_bread_2;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
@@ -266,13 +262,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         name = "Cake";
         catagory = "Fruit";
         picid = R.drawable.food_cake;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Cake";
-        catagory = "Fruit";
-        picid = R.drawable.food_cake_2;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
@@ -321,13 +310,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
 
         name = "Cheese";
         catagory = "Fruit";
-        picid = R.drawable.food_cheese;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Cheese";
-        catagory = "Fruit";
         picid = R.drawable.food_cheese_1;
         days = 60;
         fm = 2;
@@ -336,13 +318,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         name = "Cherry";
         catagory = "Fruit";
         picid = R.drawable.food_cherry;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Chili pepper";
-        catagory = "Fruit";
-        picid = R.drawable.food_chili;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
@@ -412,13 +387,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
 
         name = "Corn";
         catagory = "Fruit";
-        picid = R.drawable.food_corn;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Corn";
-        catagory = "Fruit";
         picid = R.drawable.food_corn_1;
         days = 60;
         fm = 2;
@@ -459,13 +427,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Cup";
-        catagory = "Fruit";
-        picid = R.drawable.food_cup;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
         name = "Cupcake";
         catagory = "Fruit";
         picid = R.drawable.food_cupcake;
@@ -483,20 +444,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         name = "Dim Sum";
         catagory = "Fruit";
         picid = R.drawable.food_dim_sum;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Dish";
-        catagory = "Fruit";
-        picid = R.drawable.food_dish;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Dish";
-        catagory = "Fruit";
-        picid = R.drawable.food_dish_2;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
@@ -566,13 +513,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
 
         name = "Flour";
         catagory = "Fruit";
-        picid = R.drawable.food_flour;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Flour";
-        catagory = "Fruit";
         picid = R.drawable.food_flour_1;
         days = 60;
         fm = 2;
@@ -587,28 +527,14 @@ public class PresetDatabase  extends SQLiteOpenHelper {
 
         name = "Garlic";
         catagory = "Fruit";
-        picid = R.drawable.food_garlic;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Garlic";
-        catagory = "Fruit";
         picid = R.drawable.food_garlic_2;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "GingerBread";
+        name = "Ginger Bread";
         catagory = "Fruit";
         picid = R.drawable.food_gingerbread;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Drink";
-        catagory = "Fruit";
-        picid = R.drawable.food_glass;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
@@ -651,13 +577,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         name = "Honey";
         catagory = "Fruit";
         picid = R.drawable.food_honey;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Honey";
-        catagory = "Fruit";
-        picid = R.drawable.food_honey_2;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
@@ -795,13 +714,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Misc";
-        catagory = "Fruit";
-        picid = R.drawable.food_misc;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
         name = "Mushroom";
         catagory = "Fruit";
         picid = R.drawable.food_mushroom;
@@ -858,13 +770,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Olive";
-        catagory = "Fruit";
-        picid = R.drawable.food_olive;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
         name = "Olive oil";
         catagory = "Fruit";
         picid = R.drawable.food_olive_oil;
@@ -889,13 +794,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         name = "Orange";
         catagory = "Fruit";
         picid = R.drawable.food_orange;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Organic";
-        catagory = "Fruit";
-        picid = R.drawable.food_organic;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
@@ -949,7 +847,7 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Pepper";
+        name = "Peppers";
         catagory = "Fruit";
         picid = R.drawable.food_pepper;
         days = 60;
@@ -1119,13 +1017,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
 
         name = "Sandwich";
         catagory = "Fruit";
-        picid = R.drawable.food_sandwich;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Sandwich";
-        catagory = "Fruit";
         picid = R.drawable.food_sandwich_1;
         days = 60;
         fm = 2;
@@ -1145,14 +1036,14 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "seeds";
+        name = "Seeds";
         catagory = "Fruit";
         picid = R.drawable.food_seeds;
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "sesame";
+        name = "Sesame";
         catagory = "Fruit";
         picid = R.drawable.food_sesame;
         days = 60;
@@ -1201,27 +1092,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Sugar";
-        catagory = "Fruit";
-        picid = R.drawable.food_sugar;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Sugar Cubes";
-        catagory = "Fruit";
-        picid = R.drawable.food_sugar_cube;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Sushi";
-        catagory = "Fruit";
-        picid = R.drawable.food_sushi;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
         name = "Sushi";
         catagory = "Fruit";
         picid = R.drawable.food_sushi_1;
@@ -1250,13 +1120,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Can";
-        catagory = "Fruit";
-        picid = R.drawable.food_tin_can;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
         name = "Toast";
         catagory = "Fruit";
         picid = R.drawable.food_toast;
@@ -1278,20 +1141,6 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
 
-        name = "Vegan";
-        catagory = "Fruit";
-        picid = R.drawable.food_vegan;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
-        name = "Water";
-        catagory = "Fruit";
-        picid = R.drawable.food_water;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
         name = "Watermelon";
         catagory = "Fruit";
         picid = R.drawable.food_watermelon;
@@ -1305,13 +1154,5 @@ public class PresetDatabase  extends SQLiteOpenHelper {
         days = 60;
         fm = 2;
         addPreset(name,catagory,picid,days,fm);
-
-        name = "Wrap";
-        catagory = "Fruit";
-        picid = R.drawable.food_wrap_2;
-        days = 60;
-        fm = 2;
-        addPreset(name,catagory,picid,days,fm);
-
     }
 }

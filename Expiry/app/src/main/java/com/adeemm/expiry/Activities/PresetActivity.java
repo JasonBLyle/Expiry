@@ -29,7 +29,7 @@ public class PresetActivity extends AppCompatActivity {
 
         foods = presetDatabase.getAll();
 
-        PresetAdapter pAdapter = new PresetAdapter(this,foods);
+        PresetAdapter pAdapter = new PresetAdapter(this, foods);
 
         presetView.setAdapter(pAdapter);
         presetView.setLayoutManager(new LinearLayoutManager(this));

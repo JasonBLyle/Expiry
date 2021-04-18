@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.adeemm.expiry.Models.ExpirationDatabase;
 import com.adeemm.expiry.Models.Food;
-import com.adeemm.expiry.Models.PresetDatabase;
 import com.adeemm.expiry.R;
 import com.adeemm.expiry.Utils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -29,7 +28,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class ItemEntry extends AppCompatActivity {
 
@@ -54,7 +52,6 @@ public class ItemEntry extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Item");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         foodFormImageView = findViewById(R.id.foodImageView);
         foodFormName = findViewById(R.id.foodNameTextView);
@@ -64,48 +61,27 @@ public class ItemEntry extends AppCompatActivity {
 
         setupEventListeners(foodFormExpiration);
 
-        // Check if UPC scan flow
         database = new ExpirationDatabase(this);
 
+        // Check if auto-fill flow
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            int dateID = intent.getIntExtra("PRESET", 0);
-            if(dateID!=0){
-                int tempint = intent.getIntExtra("PRESET_POSITION",0);
-                PresetDatabase presetDatabase = new PresetDatabase(this);
-                List<Food> foodList = presetDatabase.getAll();
-                f = foodList.get(tempint);
-                foodFormName.setText(f.getName());
-                foodFormImageView.setImageResource(f.getPictureID());
-                foodFormImageView.setTag(f.getPictureID());
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, f.getYear());
-                calendar.set(Calendar.MONTH, f.getMonth());
-                calendar.set(Calendar.DAY_OF_MONTH, f.getDay());
-
-                long time = calendar.getTimeInMillis();
-                selectedExpirationDate = calendar.getTime();
-                foodFormExpiration.setText(Utils.getFormattedDate(time));
+            String productName = intent.getStringExtra("FOOD_NAME");
+            int imageID = intent.getIntExtra("FOOD_PIC", 0);
+            long expirationDateTime = intent.getLongExtra("FOOD_EXP", -1);
+            if (!productName.equals("")) {
+                foodFormName.setText(productName);
             }
-            else {
-                String productName = intent.getStringExtra("FOOD_NAME");
-                int imageID = intent.getIntExtra("FOOD_PIC", 0);
-                long expirationDateTime = intent.getLongExtra("FOOD_EXP", -1);
-                if (!productName.equals("")) {
-                    foodFormName.setText(productName);
-                }
-                if (imageID != 0) {
-                    foodFormImageView.setImageResource(imageID);
-                    foodFormImageView.setTag(imageID);
-                }
-                if (expirationDateTime != -1) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTimeInMillis(expirationDateTime);
-                    selectedExpirationDate = cal.getTime();
-                    foodFormExpiration.setText(Utils.getFormattedDate(expirationDateTime));
-                }
+            if (imageID != 0) {
+                foodFormImageView.setImageResource(imageID);
+                foodFormImageView.setTag(imageID);
+            }
+            if (expirationDateTime != -1) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(expirationDateTime);
+                selectedExpirationDate = cal.getTime();
+                foodFormExpiration.setText(Utils.getFormattedDate(expirationDateTime));
             }
         }
 
@@ -130,26 +106,16 @@ public class ItemEntry extends AppCompatActivity {
                 ((ProgressBar)findViewById(R.id.searchProgressBar)).setVisibility(View.VISIBLE);
                 ((View)findViewById(R.id.item_entry_form)).setVisibility(View.GONE);
 
-                /*if (f != null) {
-                    f.setName(foodFormName.getText().toString());
-                    f.setExpiration(selectedExpirationDate);
-                    f.setPictureID((int)foodFormImageView.getTag());
-                }
-                else {
-                    f = new Food(foodFormName.getText().toString(), selectedExpirationDate);
-                    f.setPictureID(R.drawable.food_misc);
-                }*/
                 f = new Food(foodFormName.getText().toString(), selectedExpirationDate);
                 f.setPictureID((int)foodFormImageView.getTag());
 
                 database.addFood(f);
                 f = null;
+
+                // Return to home screen
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-
-
-
             }
         }
         else {

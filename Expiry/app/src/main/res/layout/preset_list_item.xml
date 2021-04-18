@@ -19,8 +19,10 @@
 
             <ImageView
                 android:id="@+id/preset1"
-                android:layout_width="176dp"
-                android:layout_height="169dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/food_apple" />
@@ -28,9 +30,9 @@
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="193dp"
-                android:layout_height="90dp"
+                android:layout_height="55dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="20dp"
                 android:text="TextView"
                 android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@+id/preset1"

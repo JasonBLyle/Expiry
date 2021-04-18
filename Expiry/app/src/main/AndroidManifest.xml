@@ -19,6 +19,7 @@
         <activity android:name=".Activities.Search" />
         <activity android:name=".Activities.ItemEntry" />
         <activity android:name=".Activities.ManualEntrySelection" />
+        <activity android:name=".Activities.PresetActivity" />
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name">
