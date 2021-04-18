@@ -33,8 +33,9 @@ public class ManualEntrySelection extends AppCompatActivity {
                     case 0:
                         cls = Search.class;
                         break;
-               //     case 1:
-               //         break;
+                    case 1:
+                        cls = PresetActivity.class;
+                        break;
                     case 2:
                         cls = ItemEntry.class;
                         break;
