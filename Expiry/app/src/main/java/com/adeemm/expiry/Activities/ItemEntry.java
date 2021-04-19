@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Item entry is the class that allows the user to add items to the database
+ */
 public class ItemEntry extends AppCompatActivity {
 
     private boolean submitted = false;
@@ -52,7 +55,7 @@ public class ItemEntry extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Item");
         setSupportActionBar(toolbar);
-
+        //loads all the view items
         foodFormImageView = findViewById(R.id.foodImageView);
         foodFormName = findViewById(R.id.foodNameTextView);
         foodFormExpiration = findViewById(R.id.expirationDateTextView);

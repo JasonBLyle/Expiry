@@ -42,6 +42,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * This is the activity that allows the user to search for an item by name
+ */
 
 public class Search extends AppCompatActivity {
 
@@ -53,6 +56,9 @@ public class Search extends AppCompatActivity {
     private SpeechRecognizer speechRecognizer;
     private ExpirationAPI api;
 
+    /**
+     * This function loads the view for the user
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +92,9 @@ public class Search extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function launches the api call based on the user's entry
+     */
     public void onClickSearch(View view) {
         if (!searchText.getText().toString().trim().equals("")) {
             progressBar.setVisibility(View.VISIBLE);
@@ -100,6 +109,10 @@ public class Search extends AppCompatActivity {
         }
     }
 
+    /**
+     * This is the function that calls the microphone to let the user tell thier search request to the phone
+     *
+     */
     public void onClickMic(View view) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.RECORD_AUDIO }, 7);
@@ -158,6 +171,9 @@ public class Search extends AppCompatActivity {
         speechRecognizer.startListening(intent);
     }
 
+    /**
+     * This is the function that handles the result from the search
+     */
     public void handleSearchResponse(Map<String, Uri> results) {
         progressBar.setVisibility(View.GONE);
         searchButton.setAlpha(1f);
@@ -167,6 +183,9 @@ public class Search extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * This function hides the keyboard
+     */
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
 
@@ -175,6 +194,9 @@ public class Search extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function destroys the speechRecognizer
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

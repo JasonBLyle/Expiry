@@ -24,11 +24,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * This function handles the results from the search
+ */
 
 public class SearchResults extends AppCompatActivity {
 
     private String clickedItem;
 
+    /**
+     * This function loads the view for the search results
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +71,10 @@ public class SearchResults extends AppCompatActivity {
         });
     }
 
+    /**
+     * This function parses the infromation from the api and translates it into information our
+     * item entry activity can use
+     */
     public void apiCallback(String expiration) {
         Calendar cal = null;
 

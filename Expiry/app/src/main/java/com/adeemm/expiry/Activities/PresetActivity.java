@@ -13,11 +13,17 @@ import com.adeemm.expiry.R;
 
 import java.util.List;
 
+/**
+ * This is the activity that displays all the preset items for user
+ */
 public class PresetActivity extends AppCompatActivity {
 
     List<Food> foods;
     RecyclerView presetView;
 
+    /**
+     * This function loads all the items into the recycler view for the user to pick from
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
