@@ -1,5 +1,6 @@
 package com.adeemm.expiry.Models;
 
+
 import android.app.Activity;
 import android.net.Uri;
 
@@ -14,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.function.Consumer;
 
+
 /**
  * This is the class that calls the openfoodfacts api with the barcode from the capture class
  * to find out what item was scanned.
@@ -22,9 +24,7 @@ public class BarcodeAPI {
     private final String baseURL = "https://world.openfoodfacts.org/api/v0/product/";
     private final Activity instance;
     private final RequestQueue rq;
-    /**
-     * This is the constructor for the ExpirationAPI class
-     */
+
     public BarcodeAPI(Activity obj) {
         this.rq = Volley.newRequestQueue(obj);
         this.instance = obj;
@@ -41,7 +41,7 @@ public class BarcodeAPI {
 
     /**
      * Pre: url is the url for the product we are looking up
-     * Post: the response is recoded and used in the other api
+     * Post: the response is recorded, and the given callback is called
      */
     public void getData(Uri url, Consumer<JSONObject> callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest

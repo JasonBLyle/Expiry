@@ -2,6 +2,7 @@ package com.adeemm.expiry.Activities;
 
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -16,6 +17,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -34,6 +37,9 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
+
 /**
  * This is the main activity of the app. This is where the user can see all thier foods and
  * navigate to the page to add more.
@@ -43,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean fabToggled = false;
 
     private View overlay;
+
+    private View emptyList;
 
     private View fab_cam_view;
     private View fab_mic_view;
@@ -75,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
         overlay = findViewById(R.id.overlay);
         overlay.setVisibility(View.GONE);
 
-        //This toggles the FAB
+        emptyList = findViewById(R.id.empty_list_view);
+
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 toggleFAB(view);
             }
         });
-        //This calls the camera button which launches the zxing capture activity after being called.
+
+        // This calls the camera button which launches the zxing capture activity after being called.
         ((FloatingActionButton) findViewById(R.id.fab_cam_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 intentIntegrator.initiateScan();
             }
         });
-        //This launches the microphone search activity
+
+        // This launches the microphone search activity
         ((FloatingActionButton) findViewById(R.id.fab_mic_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         //This launches the manual entry activity
         ((FloatingActionButton) findViewById(R.id.fab_manual_button)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         if (intentResult.getContents() != null) {
             String scannedText = intentResult.getContents();
 
+            // Get product data associated with the UPC barcode
             Uri uri = api.getURL(scannedText);
             api.getData(uri, this::productBarcodeHandler);
         }
@@ -211,11 +224,10 @@ public class MainActivity extends AppCompatActivity {
      * see if time has passed.
      */
     private void initListItems() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        database.updateList();
         List<Food> foods = database.getAll();
 
         List<ListItem> items = new ArrayList<>();
@@ -232,10 +244,62 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new ListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, ListItem obj, int position) {
-                database.removeFood(items.get(position).getFood());
-                items.remove(position);
-                adapter.notifyDataSetChanged();
+//                database.removeFood(items.get(position).getFood());
+//                items.remove(position);
+//                adapter.notifyDataSetChanged();
+//                Toast.makeText(getApplicationContext(),"Item Removed!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Swipe handler for the rows in the listview
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                int position = viewHolder.getAdapterPosition();
+
+                if (swipeDir == ItemTouchHelper.LEFT) {
+                    Toast.makeText(getApplicationContext(),"Item Removed!", Toast.LENGTH_SHORT).show();
+                    database.removeFood(items.get(position).getFood());
+                    adapter.notifyDataSetChanged();
+                    items.remove(position);
+                    recreate();
+
+                }
+                else if (swipeDir == ItemTouchHelper.RIGHT) {
+                    Toast.makeText(getApplicationContext(),"Frozen toggled!", Toast.LENGTH_SHORT).show();
+                    database.freezeFood(items.get(position).getFood());
+                    adapter.notifyDataSetChanged();
+                    recreate();
+                }
+            }
+
+            @Override
+            public void onChildDraw (Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addSwipeRightActionIcon(R.drawable.snowflake)
+                        .addSwipeRightBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.freeze_blue))
+                        .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                        .addSwipeLeftBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.design_default_color_error))
+                        .setActionIconTint(ContextCompat.getColor(MainActivity.this, R.color.white))
+                        .create()
+                        .decorate();
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) { return false; }
+        });
+        touchHelper.attachToRecyclerView(recyclerView);
+
+        // Check item list size to display empty view
+        if (items.isEmpty()) {
+            emptyList.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyList.setVisibility(View.GONE);
+        }
     }
 }

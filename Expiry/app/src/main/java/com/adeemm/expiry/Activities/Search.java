@@ -42,10 +42,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+
 /**
  * This is the activity that allows the user to search for an item by name
  */
-
 public class Search extends AppCompatActivity {
 
     private ProgressBar progressBar;
@@ -110,8 +110,7 @@ public class Search extends AppCompatActivity {
     }
 
     /**
-     * This is the function that calls the microphone to let the user tell thier search request to the phone
-     *
+     * This is the function that calls the speech recognition api to let the user speak their search request to the phone
      */
     public void onClickMic(View view) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
@@ -195,7 +194,7 @@ public class Search extends AppCompatActivity {
     }
 
     /**
-     * This function destroys the speechRecognizer
+     * Override the deconstructer to destroy the recognizer object
      */
     @Override
     protected void onDestroy() {

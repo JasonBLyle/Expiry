@@ -24,9 +24,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+
 /**
  * This function handles the results from the search
  */
+
 
 public class SearchResults extends AppCompatActivity {
 
@@ -40,12 +42,6 @@ public class SearchResults extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
-
-        // TODO: fix and add includes
-        //Toolbar toolbar = findViewById(R.id.toolbar3);
-        //toolbar.setTitle("Search Results");
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ExpirationAPI api = new ExpirationAPI(this);
 

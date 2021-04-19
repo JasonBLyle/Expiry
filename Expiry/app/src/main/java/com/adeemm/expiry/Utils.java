@@ -1,7 +1,9 @@
 package com.adeemm.expiry;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 /**
  * This class exists to convert a string into the format we need it
@@ -12,7 +14,7 @@ public class Utils {
 
     /**
      * Pre:s is a string
-     * Post: s is in the format we need
+     * Post: returns a string in Title Case
      */
     public static String convertToTitleCase(String s) {
         boolean whiteSpace = true;
@@ -42,7 +44,7 @@ public class Utils {
     }
 
     /**
-     * This string turns the time long into the formated string for our item entry class
+     * This string turns the time into a formatted date string for our item entry form
      */
     public static String getFormattedDate(long time) {
         SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");

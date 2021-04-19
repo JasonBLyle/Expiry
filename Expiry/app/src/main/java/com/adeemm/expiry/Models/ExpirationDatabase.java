@@ -1,5 +1,6 @@
 package com.adeemm.expiry.Models;
 
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * This is the database that holds the user's food
  */
@@ -22,6 +24,7 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "expirations.db";
     private static final int VERSION = 3;
+
     /**
      * this function creates a reference to this database
      * @param context is the activity calling the database
@@ -43,6 +46,7 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         private static final String FREEZE_MULTIPIER = "f_mult";
         private static final String FROZEN = "frozen";
     }
+
     /**
      *  This function creates the database
      * @param db is this database
@@ -79,9 +83,9 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         values.put(ExpirationDatabase.FoodTable.NAME,newFood.getName());
         values.put(ExpirationDatabase.FoodTable.PICTURE,newFood.getPictureID());
         values.put(ExpirationDatabase.FoodTable.CATEGORY,newFood.getCategory());
-        values.put(ExpirationDatabase.FoodTable.YEAR,c.get(Calendar.YEAR)-1900);
-        values.put(ExpirationDatabase.FoodTable.MONTH,c.get(Calendar.MONTH));
-        values.put(ExpirationDatabase.FoodTable.DAY,c.get(Calendar.DAY_OF_MONTH));
+        values.put(ExpirationDatabase.FoodTable.YEAR,newFood.getYear());
+        values.put(ExpirationDatabase.FoodTable.MONTH,newFood.getMonth());
+        values.put(ExpirationDatabase.FoodTable.DAY,newFood.getDay());
         values.put(ExpirationDatabase.FoodTable.REMAINING_DAYS,temp);
         values.put(ExpirationDatabase.FoodTable.FREEZE_MULTIPIER,2);
         values.put(ExpirationDatabase.FoodTable.FROZEN,0);
@@ -99,9 +103,9 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         String name = newFood.getName();
-        int year = newFood.getYear() -1900;
+        int year = newFood.getYear();
         int month = newFood.getMonth();
-        int day = newFood.getDay()-newFood.getrDays();
+        int day = newFood.getDay();
 
         String table_name = FoodTable.NAME;
         String table_year = FoodTable.YEAR;
@@ -115,14 +119,16 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     * Pre:Food is the food being frozen or unfrozen
+     * Pre: Food is the food being frozen or unfrozen
      * Post: Food's remaining days have been changed and its frozen status has changed
      * @param food is the food being frozen
      * @return food is the food after being modified to either being frozen or unfrozen
      */
     public Food freezeFood(Food food){
+        String queryString = "SELECT * FROM " + ExpirationDatabase.FoodTable.TABLE + " WHERE " + ExpirationDatabase.FoodTable.NAME + " = " + String.format("'%s'", food.getName());
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db.rawQuery("Select * from FOOD where Food = ?",new String[]{food.getName()});
+
+        Cursor cursor = db.rawQuery(queryString,null);
 
         if(cursor.moveToFirst()){
             do{
@@ -174,10 +180,14 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                     }
                 }
                 else {
+
                 }
                 db.close();
                 return food;
+
+
             }while(cursor.moveToNext());
+
         }
         else{
 
@@ -257,6 +267,7 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                     cv.put(ExpirationDatabase.FoodTable.REMAINING_DAYS,rDays);
                     db.update(ExpirationDatabase.FoodTable.TABLE,cv,"_id = ?",new String[]{String.valueOf(experiationID)});
                 }
+
             }while(cursor.moveToNext());
             db.close();
             return true;
@@ -265,10 +276,12 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
             db.close();
             return false;
         }
+
+
     }
 
     /**
-     * This function updgrades the database if the database parameters was changes
+     * This function updgrades the database if the database parameters were changed
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion,
@@ -276,9 +289,10 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
         db.execSQL("drop table if exists " + ExpirationDatabase.FoodTable.TABLE);
         onCreate(db);
     }
+
     /**
      * Pre: the database has been initialized
-     * Post: return = all the presets in the database
+     * Post: return = all the food in the database
      */
     public List<Food> getAll(){
         List<Food> returnList = new ArrayList<>();
@@ -299,13 +313,17 @@ public class ExpirationDatabase extends SQLiteOpenHelper {
                 int rDays = cursor.getInt(7);
                 int freez_M = cursor.getInt(8);
                 int frozen = cursor.getInt(9);
-                Date tempDate = new Date(year,month,day);
+
                 Calendar c = Calendar.getInstance();
-                c.setTime(tempDate);
-                c.add(Calendar.DATE, rDays);
+                c.set(year, month, day);
+
+                if(frozen != 0) {
+                    c.add(Calendar.DATE,rDays*freez_M);
+                }
+
                 Date exDate = c.getTime();
-                Food tempFood = new Food(name,exDate);
-                if(frozen != 0){
+                Food tempFood = new Food(name, exDate);
+                if (frozen != 0) {
                     tempFood.setFrozen(true);
                 }
                 else {

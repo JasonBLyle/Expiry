@@ -1,15 +1,18 @@
 package com.adeemm.expiry;
 
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.view.View;
+
 
 /**
  * This class helps with the animations we have in our app
  */
 public class AnimationHelper {
+
     /**
-     * This function makes the view disappear when needed
+     * This function makes the view disappear immediately
      */
     public static void setInvisible(View view) {
         view.setVisibility(View.GONE);
@@ -18,7 +21,7 @@ public class AnimationHelper {
     }
 
     /**
-     * This function makes the view disappear in a different way
+     * This function animates the view's disappear over 200 ms
      */
     public static void animateDisappear(View view) {
         view.setVisibility(View.VISIBLE);
@@ -37,8 +40,9 @@ public class AnimationHelper {
                 .alpha(0f)
                 .start();
     }
+
     /**
-     * This function makes the view reappear  when needed
+     * This function animates the view's appearance over 200 ms
      */
     public static void animateAppear(View view) {
         view.setVisibility(View.VISIBLE);

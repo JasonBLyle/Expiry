@@ -29,6 +29,11 @@
         android:clickable="true"
         android:fitsSystemWindows="true" />
 
+    <include
+        android:id="@+id/empty_list_view"
+        layout="@layout/list_empty"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -194,6 +199,11 @@
             app:fabSize="normal"
             app:rippleColor="@android:color/white"
             app:srcCompat="@drawable/ic_add" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
 
     </LinearLayout>
 

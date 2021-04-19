@@ -21,6 +21,7 @@ public class ListItem {
         this.name = name;
         this.isSection = isSection;
     }
+
     /**
      *Pre: food is a food
      * Post:this.name = food.getName();
@@ -60,11 +61,4 @@ public class ListItem {
     public Food getFood() {
         return food;
     }
-
-    /**
-     * Pre: f is a food
-     * Post: this.food = f
-     * @param f is the new food item to be placed in the list
-     */
-    public void setFood(Food f){this.food =f;}
 }

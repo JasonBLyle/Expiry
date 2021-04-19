@@ -1,5 +1,6 @@
 package com.adeemm.expiry;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.adeemm.expiry.Models.Food;
 import com.adeemm.expiry.Models.PresetDatabase;
 
 import java.util.List;
+
 
 /**
  * This is the adapter for the preset recycler view which allows the user to select our premade
@@ -37,7 +39,7 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
     }
 
     /**
-     * This function loads the view for the user.
+     * This function loads the view / layout for the user.
      */
     @NonNull
     @Override
@@ -49,17 +51,13 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
     }
 
     /**
-     * This function loads each row of the view with a preset
+     * This function launches the item form after clicking on a row and initializes said row
      */
     @Override
     public void onBindViewHolder(@NonNull PresetViewHolder holder, int position) {
         holder.image1.setImageResource(PresetFoods.get(position).getPictureID());
         holder.text1.setText(PresetFoods.get(position).getName());
         holder.presetLayout.setOnClickListener(new View.OnClickListener() {
-            /**
-             *This button allows the user to select a preset and it then is sent to the item entry
-             * activity for the user to finish setting it up
-             */
             @Override
             public void onClick(View v) {
                 Food f = PresetFoods.get(position);

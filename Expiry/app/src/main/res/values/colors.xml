@@ -4,10 +4,10 @@
     <color name="main_green">#46887E</color>
     <color name="alt_green">#00a987</color>
 
-    <color name="freeze_blue">#1AF3FA</color>
-
     <color name="dark_overlay">#4D000000</color>
     <color name="light_overlay">#1AFFFFFF</color>
+
+    <color name="freeze_blue">#55a4c6</color>
 
     <color name="grey_5">#f2f2f2</color>
     <color name="grey_10">#e6e6e6</color>

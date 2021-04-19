@@ -25,9 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-/**
- * This is model to get the expiration date api from stilltasty.com
- */
 
 public class ExpirationAPI {
     private final String searchURL = "https://stilltasty.com/searchitems/search";
@@ -44,7 +41,7 @@ public class ExpirationAPI {
 
     /**
      * Pre:query contains a name.
-     * callback is the response from the api.
+     * callback is a given function to pass api response data to after the network call is finished
      */
     public void getSearchResults(String query, Consumer<Map<String, Uri>> callback) {
         rq.getCache().clear();

@@ -2,21 +2,23 @@ package com.adeemm.expiry;
 
 
 import android.content.Context;
+
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.adeemm.expiry.Models.ExpirationDatabase;
+import com.adeemm.expiry.Activities.MainActivity;
 import com.adeemm.expiry.Models.ListItem;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * This is the list adapter for the main activity recycler view
@@ -57,7 +59,6 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public TextView name, description;
         public ImageView food_icon;
         public View parent_layout;
-        public ImageButton freezeButton;
 
         /**
          * This constructor initialized all the view items in the row
@@ -68,9 +69,6 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             food_icon = (ImageView) view.findViewById(R.id.expiration_icon);
             name = (TextView) view.findViewById(R.id.name);
             description = (TextView) view.findViewById(R.id.description);
-            freezeButton = view.findViewById(R.id.FreezeButton);
-
-
         }
     }
 
@@ -87,7 +85,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     /**
-     * THis function creates the row depending on if it is a section or a list item
+     * This function creates the row depending on if it is a section or a list item
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -107,8 +105,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     /**
-     * This function adds all the data from the item at position and initialized the freeze button
-     * and the onclicklistener
+     * This function adds all the data from the item at the current position
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
@@ -127,12 +124,6 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 view.food_icon.setImageResource(resID);
-                if(items.get(position).getFood().isFrozen()){
-                    view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.freeze_blue));
-                }
-                else {
-                    view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.white));
-                }
 
                 String detailsText;
                 int days = Math.abs(Math.round(ChronoUnit.DAYS.between(item.getFood().getExpiration().toInstant(), new Date().toInstant())));
@@ -146,6 +137,14 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 view.description.setText(detailsText);
+
+                if (items.get(position).getFood().isFrozen()) {
+                    view.name.setTextColor(ContextCompat.getColor(ctx, R.color.freeze_blue));
+                    view.name.setText(view.name.getText() + " - Frozen");
+                }
+                else {
+                    view.name.setTextColor(ContextCompat.getColor(ctx, R.color.black));
+                }
             }
             else {
                 view.food_icon.setImageResource(R.drawable.food_misc);
@@ -159,22 +158,8 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 }
             });
-            ((ItemViewHolder) viewHolder).freezeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ExpirationDatabase expirationDatabase = new ExpirationDatabase(ctx);
-
-                    items.get(position).setFood(expirationDatabase.freezeFood(items.get(position).getFood()));
-                    if(items.get(position).getFood().isFrozen()){
-                        view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.freeze_blue));
-                    }
-                    else {
-                        view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.white));
-                    }
-                    notifyDataSetChanged();
-                }
-            });
         }
+
         else {
             SectionViewHolder view = (SectionViewHolder) viewHolder;
             view.sectionName.setText(item.getName());

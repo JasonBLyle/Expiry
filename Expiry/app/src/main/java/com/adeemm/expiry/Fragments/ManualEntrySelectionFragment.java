@@ -16,10 +16,10 @@ import android.widget.ImageButton;
 import com.adeemm.expiry.Activities.ManualEntrySelection;
 import com.adeemm.expiry.R;
 
+
 /**
  * This is the class that handles the selection of the types of manuel entry
  */
-
 public class ManualEntrySelectionFragment extends DialogFragment {
 
     public CallbackResult callbackResult;
@@ -99,6 +99,9 @@ public class ManualEntrySelectionFragment extends DialogFragment {
         return dialog;
     }
 
+    /**
+     * Sends the user's choice back to the parent activity's handler
+     */
     public interface CallbackResult {
         void sendResult(int requestCode);
     }
