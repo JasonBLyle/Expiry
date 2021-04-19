@@ -16,6 +16,9 @@ import android.widget.ImageButton;
 import com.adeemm.expiry.Activities.ManualEntrySelection;
 import com.adeemm.expiry.R;
 
+/**
+ * This is the class that handles the selection of the types of manuel entry
+ */
 
 public class ManualEntrySelectionFragment extends DialogFragment {
 
@@ -25,6 +28,9 @@ public class ManualEntrySelectionFragment extends DialogFragment {
         this.callbackResult = callbackResult;
     }
 
+    /**
+     * This function loads the view for the user
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.manual_entry_dialog, container, false);
@@ -70,6 +76,10 @@ public class ManualEntrySelectionFragment extends DialogFragment {
         return rootView;
     }
 
+    /**
+     * Pre: 0 <= option <= 2
+     * This function receives the user's selection and redirects the user to the correct page
+     */
     private void optionClickHandler(int option) {
         if (callbackResult != null) {
             callbackResult.sendResult(option);
@@ -78,6 +88,9 @@ public class ManualEntrySelectionFragment extends DialogFragment {
         getActivity().finish();
     }
 
+    /**
+     * This function creates the dialog box
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
