@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * This is the list adapter for the main activity recycler view
+ */
 public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ListItem> items = new ArrayList<ListItem>();
@@ -29,21 +31,37 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onItemClick(View view, ListItem obj, int position);
     }
 
+    /**
+     * Pre:clickListener is an OnItemClickListener
+     * Post: this.listener = clickListener;
+     */
     public void setOnItemClickListener(final OnItemClickListener clickListener) {
         this.listener = clickListener;
     }
 
+    /**
+     * Pre:context is the context for the list
+     * items is the list of listitems for the list
+     * Post:this.items = items;
+     *   ctx = context;
+     */
     public ListAdapter(Context context, List<ListItem> items) {
         this.items = items;
         ctx = context;
     }
 
+    /**
+     * This is the view holder for the list adapter for list items
+     */
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         public TextView name, description;
         public ImageView food_icon;
         public View parent_layout;
         public ImageButton freezeButton;
 
+        /**
+         * This constructor initialized all the view items in the row
+         */
         public ItemViewHolder(View view) {
             super(view);
             parent_layout = (View) view.findViewById(R.id.parent_layout);
@@ -56,6 +74,9 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * This is the view holder for the list adapter for sections
+     */
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
         public TextView sectionName;
 
@@ -65,6 +86,9 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     * THis function creates the row depending on if it is a section or a list item
+     */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
@@ -82,6 +106,10 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return viewHolder;
     }
 
+    /**
+     * This function adds all the data from the item at position and initialized the freeze button
+     * and the onclicklistener
+     */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         ListItem item = items.get(position);
@@ -143,32 +171,40 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     else {
                         view.food_icon.setBackgroundColor(ctx.getResources().getColor(R.color.white));
                     }
-
-
                     notifyDataSetChanged();
                 }
-
-
-
             });
         }
-
         else {
             SectionViewHolder view = (SectionViewHolder) viewHolder;
             view.sectionName.setText(item.getName());
         }
     }
 
+    /**
+     * Pre:None
+     * Post:return items.size();
+     */
     @Override
     public int getItemCount() {
         return items.size();
     }
 
+    /**
+     * Pre: 0<= position < items.size()
+     * post: the type of item at the position
+     * @return
+     */
     @Override
     public int getItemViewType(int position) {
         return this.items.get(position).isSection() ? 0 : 1;
     }
 
+    /**
+     * Pre:0<= position < items.size()
+     * food is a food item
+     * Post: food is inserted in that location
+     */
     public void addItem(int index, ListItem food){
         items.add(index, food);
         notifyItemInserted(index);

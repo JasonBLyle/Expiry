@@ -4,14 +4,22 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 
+/**
+ * This class helps with the animations we have in our app
+ */
 public class AnimationHelper {
-
+    /**
+     * This function makes the view disappear when needed
+     */
     public static void setInvisible(View view) {
         view.setVisibility(View.GONE);
         view.setAlpha(0f);
         view.setTranslationY(view.getHeight());
     }
 
+    /**
+     * This function makes the view disappear in a different way
+     */
     public static void animateDisappear(View view) {
         view.setVisibility(View.VISIBLE);
         view.setAlpha(1f);
@@ -29,7 +37,9 @@ public class AnimationHelper {
                 .alpha(0f)
                 .start();
     }
-
+    /**
+     * This function makes the view reappear  when needed
+     */
     public static void animateAppear(View view) {
         view.setVisibility(View.VISIBLE);
         view.setAlpha(0f);
@@ -47,6 +57,9 @@ public class AnimationHelper {
                 .start();
     }
 
+    /**
+     * This function rotates the FAB when pressed
+     */
     public static boolean rotateFAB(View view, boolean shouldRotate) {
         view.animate()
                 .setDuration(200)

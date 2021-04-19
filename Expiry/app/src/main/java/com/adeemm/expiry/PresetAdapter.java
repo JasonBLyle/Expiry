@@ -18,16 +18,27 @@ import com.adeemm.expiry.Models.PresetDatabase;
 
 import java.util.List;
 
+/**
+ * This is the adapter for the preset recycler view which allows the user to select our premade
+ * items.
+ */
 public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetViewHolder> {
 
     List<Food> PresetFoods;
     Context context;
 
+    /**
+     * Pre:c is the context for the app
+     * foods is the list containing all the presets in the database
+     */
     public PresetAdapter(Context c, List<Food> foods){
         context = c;
         PresetFoods = foods;
     }
 
+    /**
+     * This function loads the view for the user.
+     */
     @NonNull
     @Override
     public PresetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,11 +48,18 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
         return new PresetViewHolder(view);
     }
 
+    /**
+     * This function loads each row of the view with a preset
+     */
     @Override
     public void onBindViewHolder(@NonNull PresetViewHolder holder, int position) {
         holder.image1.setImageResource(PresetFoods.get(position).getPictureID());
         holder.text1.setText(PresetFoods.get(position).getName());
         holder.presetLayout.setOnClickListener(new View.OnClickListener() {
+            /**
+             *This button allows the user to select a preset and it then is sent to the item entry
+             * activity for the user to finish setting it up
+             */
             @Override
             public void onClick(View v) {
                 Food f = PresetFoods.get(position);
@@ -56,16 +74,26 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetView
         });
     }
 
+    /**
+     * Pre:none
+     * Post: return PresetFoods.size();
+     */
     @Override
     public int getItemCount() {
         return PresetFoods.size();
     }
 
+    /**
+     * This is the view holder for hte preset recycler view.
+     */
     public class PresetViewHolder extends RecyclerView.ViewHolder {
         ImageView image1;
         TextView text1;
         ConstraintLayout presetLayout;
 
+        /**
+         * This adds all the items in the row to the holder for the recycler view.
+         */
         public PresetViewHolder(@NonNull View itemView) {
             super(itemView);
             image1 = itemView.findViewById(R.id.preset1);
